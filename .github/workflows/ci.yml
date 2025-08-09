@@ -1,0 +1,71 @@
+name: CI - Test & Coverage
+
+on:
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+  pull-requests: write
+  security-events: write
+
+jobs:
+  test:
+    name: Run Test
+    runs-on: ubuntu-22.04
+    timeout-minutes: 15
+    steps:
+      # 저장소 체크아웃
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # JDK 17 설치
+      - name: Set Up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: gradle
+
+      # Gradle 캐시 적용
+      - name: Cache Gradle Packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      # 테스트 실행
+      - name: Run Tests
+        env:
+          SPRING_PROFILES_ACTIVE: test
+        run: |
+          chmod +x ./gradlew
+          ./gradlew --no-daemon clean test
+
+      - name: Collect Jacoco Report Paths
+        id: collect-paths
+        run: |
+          JACOCO_PATHS=$(find . -type f -name 'jacocoTestReport.xml' | paste -sd "," -)
+          echo "paths=$JACOCO_PATHS" >> $GITHUB_OUTPUT
+
+      # 테스트 커버리지 결과 생성
+      - name: Generate Coverage Report
+        id: jacoco
+        uses: madrapps/jacoco-report@v1.5
+        with:
+          title: 📊 Test Coverage Report
+          paths: ${{ steps.collect-paths.outputs.paths }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          min-coverage-overall: 80
+          min-coverage-changed-files: 80
+          update-comment: true
+
+      # 테스트 커버리지 결과 요약
+      - name: Coverage Summary
+        run: |
+          echo "✅ Overall Coverage: ${{ steps.jacoco.outputs.coverage-overall }}%"
+          echo "✅ Changed Files Coverage: ${{ steps.jacoco.outputs.coverage-changed-files }}%"

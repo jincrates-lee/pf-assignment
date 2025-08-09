@@ -1,0 +1,73 @@
+plugins {
+    id "java"
+    id "org.springframework.boot" version "3.5.4"
+    id "io.spring.dependency-management" version "1.1.7"
+    id 'jacoco'
+}
+
+group = "me.jincrates.pf"
+version = "0.0.1-SNAPSHOT"
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+    implementation "org.springframework.boot:spring-boot-starter-validation"
+
+    runtimeOnly "com.h2database:h2"
+    annotationProcessor "org.projectlombok:lombok"
+
+    compileOnly "org.projectlombok:lombok"
+
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation "org.springframework.boot:spring-boot-starter-webflux"
+    testRuntimeOnly "org.junit.platform:junit-platform-launcher"
+}
+
+test {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport // 테스트 후 Jacoco 보고서 생성
+}
+
+// jacoco
+jacoco {
+    toolVersion = "0.8.12"
+}
+
+jacocoTestReport {
+    dependsOn test // 테스트가 끝난 후에 Jacoco 보고서 생성
+    reports {
+        xml.required = true
+        csv.required = false
+        html.required = false
+    }
+
+    // report 제외대상 지정
+    afterEvaluate {
+        classDirectories.setFrom(
+                files(classDirectories.files.collect {
+                    fileTree(dir: it, exclude: [
+                            '**/generated/**',
+                            '**/Q*.class',
+                            '**/*Config.class',
+                            "**/*Application.class"
+                    ])
+                })
+        )
+    }
+}
