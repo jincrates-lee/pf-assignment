@@ -53,7 +53,6 @@ class ProductService implements ProductUseCase {
     @Override
     @Transactional
     public UpdateProductResponse update(final UpdateProductRequest request) {
-        validateProductExists(request.id());
         Product existing = repository.findById(request.id())
             .orElseThrow(() -> new BusinessException(
                 "상품을 찾을 수 없습니다.",
@@ -63,7 +62,10 @@ class ProductService implements ProductUseCase {
                 )
             ));
 
-        List<Category> categories = validatedCategories(request.categoryIds());
+        List<Category> categories = existing.categories();
+        if (request.categoryIds() != null) {
+            categories = validatedCategories(request.categoryIds());
+        }
 
         Product product = Product.builder()
             .id(request.id())
@@ -96,7 +98,15 @@ class ProductService implements ProductUseCase {
     @Override
     @Transactional
     public void delete(final Long productId) {
-        validateProductExists(productId);
+        if (!repository.existsById(productId)) {
+            throw new BusinessException(
+                "상품을 찾을 수 없습니다.",
+                Map.of(
+                    "productId",
+                    productId
+                )
+            );
+        }
 
         repository.deleteById(productId);
 
@@ -132,17 +142,5 @@ class ProductService implements ProductUseCase {
         }
 
         return categories;
-    }
-
-    private void validateProductExists(final Long productId) {
-        if (!repository.existsById(productId)) {
-            throw new BusinessException(
-                "상품을 찾을 수 없습니다.",
-                Map.of(
-                    "productId",
-                    productId
-                )
-            );
-        }
     }
 }
