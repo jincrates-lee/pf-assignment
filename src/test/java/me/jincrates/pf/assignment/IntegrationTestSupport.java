@@ -11,5 +11,5 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 public abstract class IntegrationTestSupport {
 
     @Autowired
-    private WebTestClient webTestClient;
+    protected WebTestClient webTestClient;
 }

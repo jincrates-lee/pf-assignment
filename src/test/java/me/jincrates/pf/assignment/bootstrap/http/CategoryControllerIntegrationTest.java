@@ -14,14 +14,10 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.test.web.reactive.server.WebTestClient;
 
 @Tag("integration")
 @DisplayName("카테고리 API 통합 테스트")
 class CategoryControllerIntegrationTest extends IntegrationTestSupport {
-
-    @Autowired
-    private WebTestClient webTestClient;
 
     @Autowired
     private CategoryRepository categoryRepository;
