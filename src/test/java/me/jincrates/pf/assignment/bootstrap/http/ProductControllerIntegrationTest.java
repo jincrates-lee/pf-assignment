@@ -349,7 +349,7 @@ class ProductControllerIntegrationTest extends IntegrationTestSupport {
                 .expectStatus().isBadRequest()
                 .expectBody()
                 .jsonPath("$.success").isEqualTo(false)
-                .jsonPath("$.message").isEqualTo("상품 이름은 필수입니다. 입력된 값: [name=]")
+                .jsonPath("$.message").isEqualTo("상품 이름은 필수입니다.")
                 .jsonPath("$.data").isEmpty();
         }
 
