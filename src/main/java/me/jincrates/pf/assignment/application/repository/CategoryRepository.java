@@ -2,7 +2,7 @@ package me.jincrates.pf.assignment.application.repository;
 
 import java.util.List;
 import java.util.Optional;
-import me.jincrates.pf.assignment.domain.catalog.Category;
+import me.jincrates.pf.assignment.domain.model.Category;
 
 public interface CategoryRepository {
 

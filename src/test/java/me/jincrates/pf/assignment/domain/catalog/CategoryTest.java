@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
+import me.jincrates.pf.assignment.domain.exception.BusinessException;
+import me.jincrates.pf.assignment.domain.model.Category;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -68,7 +70,7 @@ class CategoryTest {
             .parent(null)
             .build()
         )
-            .isInstanceOf(IllegalArgumentException.class)
+            .isInstanceOf(BusinessException.class)
             .hasMessage("카테고리 이름은 필수입니다.");
     }
 
@@ -83,7 +85,7 @@ class CategoryTest {
             .parent(null)
             .build()
         )
-            .isInstanceOf(IllegalArgumentException.class)
+            .isInstanceOf(BusinessException.class)
             .hasMessage("카테고리 단계는 필수입니다.");
     }
 
@@ -99,7 +101,7 @@ class CategoryTest {
             .parent(null)
             .build()
         )
-            .isInstanceOf(IllegalArgumentException.class)
+            .isInstanceOf(BusinessException.class)
             .hasMessage("카테고리 단계는 0보다 커야합니다.");
     }
 }

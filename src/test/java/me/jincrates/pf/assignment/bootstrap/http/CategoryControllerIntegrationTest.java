@@ -6,7 +6,7 @@ import me.jincrates.pf.assignment.IntegrationTestSupport;
 import me.jincrates.pf.assignment.application.dto.CreateCategoryRequest;
 import me.jincrates.pf.assignment.application.dto.CreateCategoryResponse;
 import me.jincrates.pf.assignment.application.repository.CategoryRepository;
-import me.jincrates.pf.assignment.domain.catalog.Category;
+import me.jincrates.pf.assignment.domain.model.Category;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

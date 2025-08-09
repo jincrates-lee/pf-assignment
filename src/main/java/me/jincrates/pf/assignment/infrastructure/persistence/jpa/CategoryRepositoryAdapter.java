@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import me.jincrates.pf.assignment.application.repository.CategoryRepository;
-import me.jincrates.pf.assignment.domain.catalog.Category;
+import me.jincrates.pf.assignment.domain.model.Category;
 import me.jincrates.pf.assignment.infrastructure.persistence.jpa.entity.CategoryJpaEntity;
 import me.jincrates.pf.assignment.infrastructure.persistence.jpa.mapper.CategoryJpaMapper;
 import me.jincrates.pf.assignment.infrastructure.persistence.jpa.repository.CategoryJpaRepository;

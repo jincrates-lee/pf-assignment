@@ -1,7 +1,7 @@
 package me.jincrates.pf.assignment.infrastructure.persistence.jpa.mapper;
 
 import java.util.List;
-import me.jincrates.pf.assignment.domain.catalog.Category;
+import me.jincrates.pf.assignment.domain.model.Category;
 import me.jincrates.pf.assignment.infrastructure.persistence.jpa.entity.CategoryJpaEntity;
 
 public class CategoryJpaMapper {

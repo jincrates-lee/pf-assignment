@@ -3,6 +3,8 @@ package me.jincrates.pf.assignment.bootstrap.http.advice;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import me.jincrates.pf.assignment.bootstrap.http.BaseResponse;
+import me.jincrates.pf.assignment.domain.exception.BusinessException;
+import me.jincrates.pf.assignment.domain.exception.ServerException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -89,38 +91,37 @@ public class GlobalControllerAdvice extends ResponseEntityExceptionHandler {
         );
     }
 
-//    /**
-//     * 비즈니스 에러(커스텀)
-//     */
-//    @ExceptionHandler(BusinessException.class)
-//    protected ResponseEntity<?> handleBusinessException(BusinessException exception) {
-//        log.warn(
-//            "BusinessException occurred - message: {}, arguments: {}",
-//            exception.getMessage(),
-//            exception.getArguments()
-//        );
-//        return error(
-//            HttpStatus.BAD_REQUEST,
-//            exception.getMessage()
-//        );
-//    }
-//
-//    /**
-//     * 서버 에러(커스텀)
-//     */
-//    @ExceptionHandler(ServerException.class)
-//    protected ResponseEntity<?> handleServerException(ServerException exception) {
-//        log.warn(
-//            "ServerException occurred - message: {}, arguments: {}",
-//            exception.getMessage(),
-//            exception.getArguments()
-//        );
-//        return error(
-//            HttpStatus.BAD_REQUEST,
-//            exception.getMessage()
-//        );
-//    }
+    /**
+     * 비즈니스 에러(커스텀)
+     */
+    @ExceptionHandler(BusinessException.class)
+    protected ResponseEntity<?> handleBusinessException(BusinessException exception) {
+        log.warn(
+            "BusinessException occurred - message: {}, arguments: {}",
+            exception.getMessage(),
+            exception.getArguments()
+        );
+        return error(
+            HttpStatus.BAD_REQUEST,
+            exception.getMessage()
+        );
+    }
 
+    /**
+     * 서버 에러(커스텀)
+     */
+    @ExceptionHandler(ServerException.class)
+    protected ResponseEntity<?> handleServerException(ServerException exception) {
+        log.error(
+            "ServerException occurred - message: {}, arguments: {}",
+            exception.getMessage(),
+            exception.getArguments()
+        );
+        return error(
+            HttpStatus.INTERNAL_SERVER_ERROR,
+            exception.getMessage()
+        );
+    }
 
     private ResponseEntity<Object> error(
         HttpStatusCode httpStatus,

@@ -1,11 +1,13 @@
 package me.jincrates.pf.assignment.application.service;
 
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import me.jincrates.pf.assignment.application.CategoryUseCase;
 import me.jincrates.pf.assignment.application.dto.CreateCategoryRequest;
 import me.jincrates.pf.assignment.application.dto.CreateCategoryResponse;
 import me.jincrates.pf.assignment.application.repository.CategoryRepository;
-import me.jincrates.pf.assignment.domain.catalog.Category;
+import me.jincrates.pf.assignment.domain.exception.BusinessException;
+import me.jincrates.pf.assignment.domain.model.Category;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,7 +48,13 @@ class CategoryService implements CategoryUseCase {
         final Long parentId
     ) {
         Category parent = repository.findById(parentId)
-            .orElseThrow(() -> new IllegalArgumentException("상위 카테고리를 찾을 수 없습니다."));
+            .orElseThrow(() -> new BusinessException(
+                "상위 카테고리를 찾을 수 없습니다.",
+                Map.of(
+                    "parentId",
+                    parentId
+                )
+            ));
 
         return Category.builder()
             .name(name)
