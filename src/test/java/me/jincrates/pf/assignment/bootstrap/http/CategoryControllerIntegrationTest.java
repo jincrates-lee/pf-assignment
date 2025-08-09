@@ -1,10 +1,6 @@
 package me.jincrates.pf.assignment.bootstrap.http;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import me.jincrates.pf.assignment.IntegrationTestSupport;
-import me.jincrates.pf.assignment.application.dto.CreateCategoryRequest;
-import me.jincrates.pf.assignment.application.dto.CreateCategoryResponse;
 import me.jincrates.pf.assignment.application.repository.CategoryRepository;
 import me.jincrates.pf.assignment.domain.model.Category;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,21 +9,20 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.MediaType;
 
 @Tag("integration")
 @DisplayName("카테고리 API 통합 테스트")
 class CategoryControllerIntegrationTest extends IntegrationTestSupport {
 
     @Autowired
-    private CategoryRepository categoryRepository;
+    private CategoryRepository repository;
 
     private Category parentCategory;
 
     @BeforeEach
     void setUp() {
-        categoryRepository.deleteAllInBatch();
-        parentCategory = categoryRepository.save(
+        parentCategory = repository.save(
             Category.builder()
                 .name("category-parent")
                 .depth(1)
@@ -37,65 +32,58 @@ class CategoryControllerIntegrationTest extends IntegrationTestSupport {
 
     @Nested
     @DisplayName("카테고리 생성 테스트")
-    class CreateCategoryTests {
+    class CreateCategoryTest {
 
         @Test
         @DisplayName("상위 카테고리 없이 카테고리를 생성하면 1단계 루트 카테고리가 생성된다")
         void createRootCategoryWhenNoParentProvided() {
             // given
-            CreateCategoryRequest request = CreateCategoryRequest.builder()
-                .name("category-1")
-                .build();
+            String requestBody = """
+                {
+                    "name": "category-1"
+                }
+                """;
 
             // when
             webTestClient.post()
                 .uri("/api/categories")
-                .bodyValue(request)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(requestBody)
                 .exchange()
                 // then
                 .expectStatus().isCreated()
-                .expectBody(new ParameterizedTypeReference<BaseResponse<CreateCategoryResponse>>() {
-                })
-                .value(response -> {
-                    assertThat(response).isNotNull();
-                    assertThat(response.success()).isTrue();
-                    assertThat(response.message()).isBlank();
-                    assertThat(response.data()).isNotNull();
-
-                    CreateCategoryResponse data = response.data();
-                    assertThat(data).isNotNull();
-                    assertThat(data.categoryId()).isNotNull();
-                });
+                .expectBody()
+                .jsonPath("$.success").isEqualTo(true)
+                .jsonPath("$.message").isEqualTo(null)
+                .jsonPath("$.data.categoryId").isNumber();
         }
 
         @Test
         @DisplayName("상위 카테고리를 지정하여 카테고리를 생성하면 하위 카테고리가 생성된다")
         void createChildCategoryWhenParentCategoryExists() {
             // given
-            CreateCategoryRequest request = CreateCategoryRequest.builder()
-                .name("category-child")
-                .parentId(parentCategory.id())
-                .build();
+            String requestBody = String.format(
+                """
+                    {
+                         "name": "category-1",
+                         "parentId": %d
+                    }
+                    """,
+                parentCategory.id()
+            );
 
             // when
             webTestClient.post()
                 .uri("/api/categories")
-                .bodyValue(request)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(requestBody)
                 .exchange()
                 // then
                 .expectStatus().isCreated()
-                .expectBody(new ParameterizedTypeReference<BaseResponse<CreateCategoryResponse>>() {
-                })
-                .value(response -> {
-                    assertThat(response).isNotNull();
-                    assertThat(response.success()).isTrue();
-                    assertThat(response.message()).isBlank();
-                    assertThat(response.data()).isNotNull();
-
-                    CreateCategoryResponse data = response.data();
-                    assertThat(data).isNotNull();
-                    assertThat(data.categoryId()).isNotNull();
-                });
+                .expectBody()
+                .jsonPath("$.success").isEqualTo(true)
+                .jsonPath("$.message").isEqualTo(null)
+                .jsonPath("$.data.categoryId").isNumber();
         }
 
         @Test
@@ -103,72 +91,76 @@ class CategoryControllerIntegrationTest extends IntegrationTestSupport {
         void failToCreateCategoryWhenParentCategoryNotExists() {
             // given
             Long nonExistentParentId = 99999L;
-            CreateCategoryRequest request = CreateCategoryRequest.builder()
-                .name("category-child")
-                .parentId(nonExistentParentId)
-                .build();
+            String requestBody = String.format(
+                """
+                    {
+                         "name": "category-1",
+                         "parentId": %d
+                    }
+                    """,
+                nonExistentParentId
+            );
 
             // when
             webTestClient.post()
                 .uri("/api/categories")
-                .bodyValue(request)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(requestBody)
                 .exchange()
                 // then
                 .expectStatus().isBadRequest()
-                .expectBody(BaseResponse.class)
-                .value(response -> {
-                    assertThat(response).isNotNull();
-                    assertThat(response.success()).isFalse();
-                    assertThat(response.message()).isEqualTo("상위 카테고리를 찾을 수 없습니다.");
-                    assertThat(response.data()).isNull();
-                });
+                .expectBody()
+                .jsonPath("$.success").isEqualTo(false)
+                .jsonPath("$.message").isEqualTo("상위 카테고리를 찾을 수 없습니다.")
+                .jsonPath("$.data").isEmpty();
         }
 
         @Test
         @DisplayName("카테고리명이 비어있으면 카테고리 생성이 실패한다")
         void failToCreateCategoryWhenNameIsEmpty() {
             // given
-            CreateCategoryRequest request = CreateCategoryRequest.builder()
-                .name("")
-                .build();
+            String requestBody = """
+                {
+                    "name": ""
+                }
+                """;
 
             // when
             webTestClient.post()
                 .uri("/api/categories")
-                .bodyValue(request)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(requestBody)
                 .exchange()
                 // then
                 .expectStatus().isBadRequest()
-                .expectBody(BaseResponse.class)
-                .value(response -> {
-                    assertThat(response).isNotNull();
-                    assertThat(response.success()).isFalse();
-                    assertThat(response.message()).isEqualTo("카테고리 이름은 필수입니다. 입력된 값: [name=]");
-                    assertThat(response.data()).isNull();
-                });
+                .expectBody()
+                .jsonPath("$.success").isEqualTo(false)
+                .jsonPath("$.message").isEqualTo("카테고리 이름은 필수입니다. 입력된 값: [name=]")
+                .jsonPath("$.data").isEmpty();
         }
 
         @Test
         @DisplayName("카테고리명이 null이면 카테고리 생성이 실패한다")
         void failToCreateCategoryWhenNameIsNull() {
             // given
-            CreateCategoryRequest request = CreateCategoryRequest.builder()
-                .name(null)
-                .build();
+            String requestBody = """
+                {
+                     "name": null
+                }
+                """;
 
             // when
             webTestClient.post()
                 .uri("/api/categories")
-                .bodyValue(request)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(requestBody)
                 .exchange()
                 // then
-                .expectStatus().isBadRequest().expectBody(BaseResponse.class)
-                .value(response -> {
-                    assertThat(response).isNotNull();
-                    assertThat(response.success()).isFalse();
-                    assertThat(response.message()).isEqualTo("카테고리 이름은 필수입니다. 입력된 값: [name=null]");
-                    assertThat(response.data()).isNull();
-                });
+                .expectStatus().isBadRequest()
+                .expectBody()
+                .jsonPath("$.success").isEqualTo(false)
+                .jsonPath("$.message").isEqualTo("카테고리 이름은 필수입니다. 입력된 값: [name=null]")
+                .jsonPath("$.data").isEmpty();
         }
     }
 }

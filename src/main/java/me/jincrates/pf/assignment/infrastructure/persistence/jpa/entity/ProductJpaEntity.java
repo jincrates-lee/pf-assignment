@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Set;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -23,9 +24,7 @@ import org.hibernate.annotations.Comment;
 @Entity
 @Getter
 @SuperBuilder
-@Table(name = "products", indexes = {
-    // TODO: 인덱스 추가하기
-})
+@Table(name = "products")
 @Comment("상품")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
@@ -40,28 +39,29 @@ public class ProductJpaEntity extends BaseTimeEntity {
     @Comment("상품 이름")
     private String name;
 
-    @Column(nullable = false)
-    @Comment("상품 원가")
-    private BigDecimal originPrice;
-
-    @Column(nullable = false)
+    @Column(nullable = false, precision = 15, scale = 2)
     @Comment("상품 판매가")
     private BigDecimal sellingPrice;
 
-    @Column(nullable = false)
+    @Column(nullable = false, precision = 15, scale = 2)
     @Comment("상품 할인가")
     private BigDecimal discountPrice;
 
     @Column(nullable = false)
-    @Comment("브랜드 이름")
-    private String brandName;
+    @Comment("브랜드")
+    private String brand;
 
     // 상품-카테고리 다대다 관계
+    @Builder.Default
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ProductCategoryJpaEntity> productCategories = new HashSet<>();
 
     @Version
     private long version;
+
+    public void addCategories(List<CategoryJpaEntity> categories) {
+        categories.forEach(this::addCategory);
+    }
 
     public void addCategory(CategoryJpaEntity category) {
         ProductCategoryJpaEntity productCategory = new ProductCategoryJpaEntity(
@@ -69,10 +69,6 @@ public class ProductJpaEntity extends BaseTimeEntity {
             category
         );
         productCategories.add(productCategory);
-    }
-
-    public void removeCategory(CategoryJpaEntity category) {
-        productCategories.removeIf(it -> it.getCategory().equals(category));
     }
 
     public List<CategoryJpaEntity> getCategories() {

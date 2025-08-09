@@ -36,13 +36,9 @@ class CategoryRepositoryAdapter implements CategoryRepository {
     }
 
     @Override
-    public List<Category> findAllByIdIn(final List<Long> ids) {
+    public List<Category> findAllByIdIn(final Iterable<Long> ids) {
         return repository.findAllById(ids).stream()
             .map(CategoryJpaMapper::toDomain)
             .toList();
-    }
-
-    public void deleteAllInBatch() {
-        repository.deleteAllInBatch();
     }
 }
