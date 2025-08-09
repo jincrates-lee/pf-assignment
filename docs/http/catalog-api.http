@@ -1,0 +1,8 @@
+### 카테고리 등록
+POST {{backend-api}}/api/categories
+Content-Type: application/json
+
+{
+  "name": "category-{{$random.alphanumeric(5)}}",
+  "parentId": null
+}
