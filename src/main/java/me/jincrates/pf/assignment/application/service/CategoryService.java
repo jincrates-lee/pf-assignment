@@ -20,20 +20,13 @@ class CategoryService implements CategoryUseCase {
     @Override
     @Transactional
     public CreateCategoryResponse create(final CreateCategoryRequest request) {
-        if (isRoot(request.parentId())) {
-            Category saved = createCategory(request.name());
-
-            return toResponse(saved);
-        }
-
-        Category parent = repository.findById(request.parentId())
-            .orElseThrow(() -> new IllegalArgumentException("상위 카테고리를 찾을 수 없습니다."));
-
-        Category saved = createChildCategory(
-            request.name(),
-            parent
-        );
-
+        final Category category = isRoot(request.parentId())
+            ? createRootCategory(request.name())
+            : createChildCategory(
+                request.name(),
+                request.parentId()
+            );
+        final Category saved = repository.save(category);
         return toResponse(saved);
     }
 
@@ -41,24 +34,25 @@ class CategoryService implements CategoryUseCase {
         return parentId == null;
     }
 
-    private Category createCategory(final String name) {
-        Category category = Category.builder()
+    private Category createRootCategory(final String name) {
+        return Category.builder()
             .name(name)
             .depth(ROOT_CATEGORY_DEPTH)
             .build();
-        return repository.save(category);
     }
 
     private Category createChildCategory(
         final String name,
-        final Category parent
+        final Long parentId
     ) {
-        Category category = Category.builder()
+        Category parent = repository.findById(parentId)
+            .orElseThrow(() -> new IllegalArgumentException("상위 카테고리를 찾을 수 없습니다."));
+
+        return Category.builder()
             .name(name)
             .depth(parent.depth() + 1)
             .parent(parent)
             .build();
-        return repository.save(category);
     }
 
     private CreateCategoryResponse toResponse(final Category category) {

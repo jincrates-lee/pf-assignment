@@ -3,6 +3,9 @@ package me.jincrates.pf.assignment.infrastructure.persistence.jpa.entity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
@@ -26,7 +29,12 @@ import org.hibernate.annotations.Comment;
 @Comment("상품")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class ProductJpaEntity extends BaseEntity {
+public class ProductJpaEntity extends BaseTimeEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Comment("PK")
+    private Long id;
 
     @Column(nullable = false)
     @Comment("상품 이름")

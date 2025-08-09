@@ -25,11 +25,22 @@ public class CategoryJpaMapper {
     }
 
     public static Category toDomain(final CategoryJpaEntity category) {
+        if (category == null) {
+            return null;
+        }
+        Category parent = null;
+        if (category.getParent() != null) {
+            parent = Category.builder()
+                .id(category.getParent().getId())
+                .name(category.getParent().getName())
+                .depth(category.getParent().getDepth())
+                .build();
+        }
         return Category.builder()
             .id(category.getId())
             .name(category.getName())
             .depth(category.getDepth())
-            .parent(category.getParent() == null ? null : toDomain(category.getParent()))
+            .parent(parent)
             .build();
     }
 

@@ -25,7 +25,8 @@ class CategoryRepositoryAdapter implements CategoryRepository {
 
     @Override
     public void saveAll(final List<Category> categories) {
-        categories.forEach(this::save);
+        List<CategoryJpaEntity> entities = CategoryJpaMapper.toEntity(categories);
+        repository.saveAll(entities);
     }
 
     @Override
