@@ -26,7 +26,7 @@ public record Product(
             throw new BusinessException("상품 할인가는 0원 이상이여야 합니다.");
         }
         if (sellingPrice.compareTo(discountPrice) <= 0) {
-            throw new BusinessException("상품 할인가는 상품 판매가보다 클 수 없습니다.");
+            throw new BusinessException("상품 할인가는 판매가보다 작아야 합니다.");
         }
         if (brand == null || brand.isBlank()) {
             throw new BusinessException("상품 브랜드는 필수입니다.");

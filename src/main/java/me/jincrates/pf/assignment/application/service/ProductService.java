@@ -1,5 +1,7 @@
 package me.jincrates.pf.assignment.application.service;
 
+import static me.jincrates.pf.assignment.shared.util.ValueUtil.defaultIfNull;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -52,15 +54,35 @@ class ProductService implements ProductUseCase {
     @Transactional
     public UpdateProductResponse update(final UpdateProductRequest request) {
         validateProductExists(request.id());
+        Product existing = repository.findById(request.id())
+            .orElseThrow(() -> new BusinessException(
+                "상품을 찾을 수 없습니다.",
+                Map.of(
+                    "productId",
+                    request.id()
+                )
+            ));
 
         List<Category> categories = validatedCategories(request.categoryIds());
 
         Product product = Product.builder()
             .id(request.id())
-            .name(request.name())
-            .sellingPrice(request.sellingPrice())
-            .discountPrice(request.discountPrice())
-            .brand(request.brand())
+            .name(defaultIfNull(
+                request.name(),
+                existing.name()
+            ))
+            .sellingPrice(defaultIfNull(
+                request.sellingPrice(),
+                existing.sellingPrice()
+            ))
+            .discountPrice(defaultIfNull(
+                request.discountPrice(),
+                existing.discountPrice()
+            ))
+            .brand(defaultIfNull(
+                request.brand(),
+                existing.brand()
+            ))
             .categories(categories)
             .build();
 
