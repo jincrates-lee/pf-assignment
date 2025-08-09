@@ -1,0 +1,27 @@
+### 상품 등록
+POST {{backend-api}}/api/products
+Content-Type: application/json
+
+{
+  "name": "product-{{$random.alphanumeric(5)}}",
+  "sellingPrice": 10000,
+  "discountPrice": 1000,
+  "brand":  "brand-{{$random.alphanumeric(5)}}",
+  "categoryIds": [1, 3]
+}
+
+### 상품 수정
+PUT {{backend-api}}/api/products/3
+Content-Type: application/json
+
+{
+  "name": "product-{{$random.alphanumeric(5)}}",
+  "sellingPrice": 10000,
+  "discountPrice": 2000,
+  "brand":  "brand-{{$random.alphanumeric(5)}}",
+  "categoryIds": [{{$random.integer(1, 10)}}]
+}
+
+### 상품 삭제
+DELETE {{backend-api}}/api/products/5
+

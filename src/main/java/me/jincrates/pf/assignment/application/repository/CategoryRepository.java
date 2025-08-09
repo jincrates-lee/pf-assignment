@@ -12,7 +12,5 @@ public interface CategoryRepository {
 
     Optional<Category> findById(Long categoryId);
 
-    List<Category> findAllByIdIn(List<Long> ids);
-
-    void deleteAllInBatch();
+    List<Category> findAllByIdIn(Iterable<Long> ids);
 }
