@@ -1,4 +1,4 @@
-package me.jincrates.pf.assignment.infrastructure.persistence.jpa.config;
+package me.jincrates.pf.assignment.shared.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;

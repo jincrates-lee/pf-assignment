@@ -26,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 class ProductService implements ProductUseCase {
 
-    private final ProductRepository repository;
+    private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final ApplicationEventPublisher eventPublisher;
 
@@ -43,7 +43,7 @@ class ProductService implements ProductUseCase {
             .categories(categories)
             .build();
 
-        Product saved = repository.save(product);
+        Product saved = productRepository.save(product);
 
         return CreateProductResponse.builder()
             .productId(saved.id())
@@ -53,7 +53,7 @@ class ProductService implements ProductUseCase {
     @Override
     @Transactional
     public UpdateProductResponse update(final UpdateProductRequest request) {
-        Product existing = repository.findById(request.id())
+        Product existing = productRepository.findById(request.id())
             .orElseThrow(() -> new BusinessException(
                 "상품을 찾을 수 없습니다.",
                 Map.of(
@@ -88,7 +88,7 @@ class ProductService implements ProductUseCase {
             .categories(categories)
             .build();
 
-        Product updated = repository.update(product);
+        Product updated = productRepository.update(product);
 
         return UpdateProductResponse.builder()
             .productId(updated.id())
@@ -98,7 +98,7 @@ class ProductService implements ProductUseCase {
     @Override
     @Transactional
     public void delete(final Long productId) {
-        if (!repository.existsById(productId)) {
+        if (!productRepository.existsById(productId)) {
             throw new BusinessException(
                 "상품을 찾을 수 없습니다.",
                 Map.of(
@@ -108,7 +108,7 @@ class ProductService implements ProductUseCase {
             );
         }
 
-        repository.deleteById(productId);
+        productRepository.deleteById(productId);
 
         // 상품 삭제 이벤트 발행
         eventPublisher.publishEvent(
