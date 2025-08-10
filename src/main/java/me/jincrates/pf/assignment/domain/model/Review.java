@@ -27,8 +27,8 @@ public record Review(
         if (score == null) {
             throw new BusinessException("리뷰 점수는 필수입니다.");
         }
-        if (score < 0 || score > 5) {
-            throw new BusinessException(("리뷰 점수는 1점에서 5점 사이여야 합니다."));
+        if (score < 1 || score > 5) {
+            throw new BusinessException("리뷰 점수는 1점에서 5점 사이여야 합니다.");
         }
     }
 }

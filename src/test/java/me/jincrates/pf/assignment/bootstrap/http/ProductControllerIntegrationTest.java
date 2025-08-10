@@ -269,7 +269,7 @@ class ProductControllerIntegrationTest extends IntegrationTestSupport {
             );
 
             // when & then
-            webTestClient.put()
+            webTestClient.patch()
                 .uri(
                     "/api/products/{productId}",
                     savedProduct.id()
@@ -303,7 +303,7 @@ class ProductControllerIntegrationTest extends IntegrationTestSupport {
             );
 
             // when
-            webTestClient.put()
+            webTestClient.patch()
                 .uri(
                     "/api/products/{productId}",
                     nonExistentProductId
@@ -337,7 +337,7 @@ class ProductControllerIntegrationTest extends IntegrationTestSupport {
             );
 
             // when
-            webTestClient.put()
+            webTestClient.patch()
                 .uri(
                     "/api/products/{productId}",
                     savedProduct.id()

@@ -286,8 +286,8 @@ class ReviewControllerIntegrationTest extends IntegrationTestSupport {
                 }
                 """;
 
-            // when & then
-            webTestClient.put()
+            // when
+            webTestClient.patch()
                 .uri(
                     "/api/reviews/{reviewId}",
                     savedReview.id()
@@ -295,6 +295,7 @@ class ReviewControllerIntegrationTest extends IntegrationTestSupport {
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(requestBody)
                 .exchange()
+                // then
                 .expectStatus().isOk()
                 .expectBody()
                 .jsonPath("$.success").isEqualTo(true)
@@ -315,7 +316,7 @@ class ReviewControllerIntegrationTest extends IntegrationTestSupport {
                 """;
 
             // when
-            webTestClient.put()
+            webTestClient.patch()
                 .uri(
                     "/api/reviews/{reviewId}",
                     nonExistentReviewId
@@ -347,7 +348,7 @@ class ReviewControllerIntegrationTest extends IntegrationTestSupport {
             );
 
             // when
-            webTestClient.put()
+            webTestClient.patch()
                 .uri(
                     "/api/reviews/{reviewId}",
                     savedReview.id()
@@ -378,7 +379,7 @@ class ReviewControllerIntegrationTest extends IntegrationTestSupport {
                 """;
 
             // when
-            webTestClient.put()
+            webTestClient.patch()
                 .uri(
                     "/api/reviews/{reviewId}",
                     savedReview.id()

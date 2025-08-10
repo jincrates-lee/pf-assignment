@@ -9,9 +9,9 @@ import me.jincrates.pf.assignment.application.dto.UpdateReviewRequest;
 import me.jincrates.pf.assignment.application.dto.UpdateReviewResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,7 +30,7 @@ class ReviewController extends BaseController {
         return created(useCase.create(request));
     }
 
-    @PutMapping("/{reviewId}")
+    @PatchMapping("/{reviewId}")
     public ResponseEntity<BaseResponse<UpdateReviewResponse>> updateReview(
         @PathVariable Long reviewId,
         @Valid @RequestBody UpdateReviewRequest request
