@@ -8,7 +8,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.persistence.Version;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.List;
@@ -55,9 +54,6 @@ public class ProductJpaEntity extends BaseTimeEntity {
     @Builder.Default
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ProductCategoryJpaEntity> productCategories = new HashSet<>();
-
-    @Version
-    private long version;
 
     public void addCategories(List<CategoryJpaEntity> categories) {
         categories.forEach(this::addCategory);
