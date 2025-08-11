@@ -1,105 +1,185 @@
-# pf-assignment
+# 펫프렌즈 백엔드 채용 과제
 
-펫프렌즈 백엔드 채용과제
+자바, 스프링부트, JPA를 사용한 상품/리뷰 서비스입니다.
 
-1. 필수 요구사항 이외의 인프라를 사용할 순 없는가?(ex. 레디스)
-2. 재고 관련 기능도 추가해야하는지?
-3. 카테고리는 3단계까지만 있는가? 추후 4단계 확장 예정은 없는지?
-4. 상품 목록 조회 API에서 낮은가격순은 판매가 기준인지
-5. 브랜드가 없는 상품이 있을까요?
-6. 여러 상품을 등록할 수 있나요?
-7. 인증처리는 따로 구현하지 않아도될까요?
-8. 상품 이름 글자수,
 
----
+<br/>
 
-## 과제 제출 방법
+## 기술스택
 
-1. 과제 제출 기한은 **받으신 날로부터 7일**까지 입니다.
-2. 과제를 본인의 GitHub 에 **Private Repository (비공개 저장소)**로 만들어서 올려주세요.
-3. 완료되시면 `jh.kang@pet-friends.co.kr` (임시) 을 초대하시고 메일로 회신 해주세요.
-4. 평가 결과는 **제출일로부터 7일**안에 전달됩니다.
+![Generic badge](https://img.shields.io/badge/17-OpenJDK-537E99.svg)
+![Generic badge](https://img.shields.io/badge/3.5.4-SpringBoot-6DB33F.svg)
+![Generic badge](https://img.shields.io/badge/2.3.232-H2_database-01578B.svg)
+![Generic badge](https://img.shields.io/badge/5.0-JUnit-DD524A.svg)
+![Generic badge](https://img.shields.io/badge/3.5.2-SpringDataJPA-6DB33F.svg)
+![Generic badge](https://img.shields.io/badge/1.18.38-Lombok-BC2031.svg)
+![Generic badge](https://img.shields.io/badge/2.8.9-Swagger-85EA2D.svg)
 
----
+## 실행하는 방법
 
-## 필수 요구사항
+### 1. 프로젝트 클론
 
-- JAVA 17, Spring Boot 3, Gradle, JPA
-- DB 는 H2 를 사용해주세요.
-- API 명세는 Swagger 로 확인할 수 있어야 합니다.
-- Swagger 환경에서 API 테스트가 가능해야 합니다.
-- 단위 테스트코드를 작성해주세요.
-- `README.md` 작성해주세요. (실행방법, swagger 주소 등)
-- API가 정상적으로 작동해야합니다
-- 유효성 검사가 적절하게 적용되어야합니다.
+```bash
+git clone https://github.com/jincrates-lee/pf-assignment.git
+cd pf-assignment
+```
 
-## 과제: 상품, 리뷰 서비스 API 개발
+### 2. 프로젝트 빌드
 
-### 1. 상품 등록/수정/삭제 API
+```bash
+./gradlew bootRun
+```
 
-- 상품 등록 시 `상품명` / `판매가격` / `할인가격` / `브랜드` / `카테고리정보`를 설정할 수 있다.
-- 상품에는 여러개의 `카테고리정보`가 매핑될 수 있다.
-- 상품 삭제시 해당 상품에 연관된 리뷰 정보도 함께 삭제된다
+### 3. API 문서 확인
 
-**상품 샘플 데이터**
+애플리케이션 실행 후 다음 URL에서 Swagger UI를 통해 API를 확인하고 테스트할 수 있습니다:
 
-| 상품명                           | 판매가격   | 할인가격   | 브랜드      | 카테고리정보(1단계) | 카테고리정보(2단계) | 카테고리정보(3단계) |
-|-------------------------------|--------|--------|----------|-------------|-------------|-------------|
-| 촉촉트릿 북어 80g                   | 15000  | 2100   | 촉촉트릿     | 강아지         | 간식          | 동결/건조       |
-|                               |        |        |          | 고양이         | 간식          | 동결/건조       |
-| 베스트 프라이스 치카루틴 덴탈껌 오리지널 50p    | 22000  | 11100  | 베스트 프라이스 | 강아지         | 간식          | 덴탈껌         |
-| 로얄캐닌 독 미니 인도어 어덜트 3kg 소화기 건강  | 48800  | 0      | 로얄캐닌     | 강아지         | 사료          | 건식사료        |
-|                               |        |        |          | 강아지         | 사료          | 어덜트(1-7세)   |
-| now 독 프레쉬 스몰브리드 퍼피 40g 사료샘플   | 1500   | 0      | NOW      | 강아지         | 사료          | 건식사료        |
-|                               |        |        |          | 강아지         | 사료          | 맘마샘플        |
-|                               |        |        |          | 강아지         | 사료          | 퍼피(1세미만)    |
-|                               |        |        |          | 강아지         | 사료          | 피부/피모       |
-|                               |        |        |          | 강아지         | 사료          | 장/소화        |
-| 호랑이패드 대형 60매                  | 26000  | 7100   | 호랑이      | 강아지         | 용품          | 배변용품        |
-| 캐티맨 강아지풀 낚시대                  | 3500   | 300    | 캐티맨      | 고양이         | 용품          | 낚시대/레이져     |
-| 이나바 캣 챠오 츄르 참치&가다랑어 버라이어티 14g | 40,000 | 17,100 | 이나바      | 고양이         | 간식          | 간식 파우치      |
-| 진짜육포 14종                      | 10,000 | 3,500  | 진짜육포     | 강아지         | 간식          | 저키          |
-|                               |        |        |          | 강아지         | 간식          | 사사미/육포      |
-| 로얄캐닌 인도어 캣 4kg 변냄새 감소         | 65,500 | 4,400  | 로얄캐닌     | 고양이         | 사료          | 건식사료        |
-|                               |        |        |          | 고양이         | 사료          | 어덜트(1-7세)   |
-|                               |        |        |          | 고양이         | 사료          | 요로기계        |
-|                               |        |        |          | 고양이         | 사료          | 헤어볼         |
-|                               |        |        |          | 고양이         | 사료          | 구강/치아       |
-|                               |        |        |          | 고양이         | 사료          | 장/소화        |
-|                               |        |        |          | 고양이         | 사료          | 기타          |
-| 알모네이쳐 캣 대서양참치 캔 70g           | 2,800  | 0      | 알모네이쳐    | 고양이         | 사료          | 어덜트(1-7세)   |
-|                               |        |        |          | 고양이         | 사료          | 주식캔         |
-| 캐츠랑 전연령 20kg                  | 67,000 | 16,100 | 캐츠랑      | 고양이         | 사료          | 전연령         |
-|                               |        |        |          | 고양이         | 사료          | 건식사료        |
-| 아보덤 캣 내추럴 그레인프리 캔 7종 모음       | 3,200  | 450    | 아보덤      | 고양이         | 사료          | 전연령         |
-|                               |        |        |          | 고양이         | 사료          | 주식캔         |
-|                               |        |        |          |             |             |             |
+- **Swagger UI**: [http://localhost:8090/swagger-ui/index.html](http://localhost:8090/swagger-ui/index.html)
+- **API Docs**: [http://localhost:8090/v3/api-docs](http://localhost:8090/v3/api-docs)
 
-### 2. 상품 목록 조회 API
+### 4. H2 Database Console
 
-- 상품은 기본 페이지당 5개씩 노출되어야 하고 노출 수는 변경될 수 있다.
-- 카테고리정보를 기준으로 상품목록을 조회한다.
-- 정렬은 `낮은가격순` / `리뷰많은순` 두 가지 정렬기준을 제공한다.
-- 상품 응답에는 `상품명` / `판매가격` / `할인가격` / `브랜드` / `할인율` / `리뷰평점` / `카테고리정보`가 있다
-    - 할인율은 소수점 첫번째자리에서 반올림한다.
-    - 할인율 = 할인가 / 판매가 * 100
-    - 리뷰평점은 소수점 둘째자리에서 반올림한다.
-    - 카테고리정보는 상품에 연결된 모든 카테고리정보를 응답해야한다.
+- **H2 Console**: [http://localhost:8090/h2-console](http://localhost:8090/h2-console)
+- **JDBC URL**: `jdbc:h2:mem:testdb`
+- **Username**: `sa`
+- **Password**: (없음)
 
-### 3. 리뷰 등록/수정/삭제 API
+## ERD 설계
 
-- 리뷰는 `상품ID` / `내용`/ `리뷰점수`를 등록한다.
-- 리뷰는 `내용`/ `리뷰점수`만 수정 가능하다.
-- 리뷰점수는 1~5점까지 정할 수 있다.
+```mermaid
+erDiagram
+    products {
+        bigint id PK
+        varchar name "상품 이름"
+        decimal salePrice "상품 판매가"
+        decimal discountPrice "상품 할인가"
+        varchar brand "브랜드"
+        datetime createdAt
+        datetime updatedAt
+    }
+    
+    categories {
+        bigint id PK
+        varchar name "카테고리 이름"
+        int depth "카테고리 단계(1,2,3)"
+        bigint parent_id "상위 카테고리 ID"
+        datetime created_at
+        datetime updated_at
+    }
+    
+    product_categories {
+        bigint id PK
+        bigint productId FK
+        bigint categoryId FK
+    }
+    
+    reviews {
+        bigint id PK
+        bigint product_id "상품 ID"
+        varchar content "내용"
+        int score "점수(1~5)"
+        datetime createdAt
+        datetime updatedAt
+    }
+    
+    products ||--o{ product_categories : "has"
+    categories ||--o{ product_categories : "belongs to"
+    products ||--o{ reviews : "has"
+```
 
-### 4. 상품의 리뷰 목록 조회 API
+## 아키텍처 설계
+- **Bootstrap Layer**: HTTP, 이벤트, 스케줄러 등 외부 트리거를 받아 애플리케이션을 연결하는 진입점(http, event listener)
+- **Application Layer**: 비즈니스 유즈케이스를 통해 도메인 객체들을 협력시키는 계층(usecase, port)
+  - usecase: 특정 비즈니스 시나리오, 트랜잭션 처리
+  - port: 외부와의 계약 인터페이스
+- **Domain Layer**: 핵심 비즈니스 로직과 규칙이 담긴 계층
+- **Infrastructure Layer**: 기술적 구현 세부사항을 담당하는 계층(port의 실제 구현체)
+```mermaid
+graph TD
+    subgraph "Bootstrap Layer"
+        HTTP[HTTP Controllers]
+        EVENT[Event Handlers]
+    end
+    
+    subgraph "Application Layer"
+        UC[Use Cases]
+        PORT[Ports]
+    end
+    
+    subgraph "Domain Layer"
+        MODEL[Domain Models]
+        VO[Value Objects]
+    end
+    
+    subgraph "Infrastructure Layer"
+        JPA[JPA Repositories]
 
-- 상품ID를 기준으로 리뷰 목록을 조회한다.
-- 리뷰는 기본 페이지당 5개씩 노출되어야 하고 노출 수는 변경될 수 있다.
-- 정렬은 `최근 등록순`으로 조회한다.
-- 리뷰 응답에는 `상품명` / `리뷰점수` / `내용`이 있다
+    end
+    
+    %% 의존성 방향 (Bootstrap → Application → Domain)
+    HTTP --> UC
+    EVENT --> UC
+    UC --> MODEL
+    UC --> PORT
+    PORT --> MODEL
+    
+    %% 구현 방향 (Infrastructure → Domain)
+    JPA -.-> PORT
 
-## 추가 요구사항
+    
+    %% 스타일링
+    classDef bootstrap fill:#e1f5fe
+    classDef application fill:#f3e5f5
+    classDef domain fill:#e8f5e8
+    classDef infrastructure fill:#fff3e0
+    
+    class HTTP,EVENT bootstrap
+    class UC,PORT application
+    class MODEL,VO domain
+    class JPA infrastructure
+```
 
-- 대용량 트래픽과 마이크로서비스 환경을 고려하면 좋습니다.
-- 동시성을 고려한 설계 및 구현해주세요.
+## 디렉토리 구조
+
+```text
+src/main/java
+└── me
+    └── jincrates
+        └── pf
+            └── assignment
+                ├── Application.java                - 애플리케이션 실행
+                ├── application                     
+                │   ├── UseCase.java                - 유즈케이스(usecase) 인터페이스
+                │   ├── dto                         - Request/Response DTO 객체
+                │   ├── repository                  - 포트(port) 인터페이스
+                │   └── service                     - 유즈케이스 구현체, 트랜잭션 처리
+                ├── bootstrap 
+                │   ├── handler                     - 스프링이벤트 핸들러
+                │   └── http                        - REST API 엔드포인트(HTTP 요청/응답 처리)
+                │       └── docs                    - Swagger/OpenAPI 스펙 정의
+                ├── domain
+                │   ├── event                       - 도메인 이벤트 정의
+                │   ├── exception                   - 비즈니스, 서버 커스텀 예외
+                │   ├── model                       - 도메인 모델(비즈니스 규칙과 불변성 보장)
+                │   └── vo                          - 값 객체(Value Object), 불변성 보장
+                ├── infrastructure
+                │   └── persistence
+                │       └── jpa
+                │           ├── PortAdapter.java    - 어댑터: 포트(port) 구현체
+                │           ├── entity              - JPA 엔티티
+                │           ├── mapper              - JPA 엔티티와 도메인 모델 간 매핑
+                │           └── repository          - JPA 레포지토리
+                └── shared
+                    ├── config                      - 프로젝트 설정 관련
+                    └── util                        - 유틸클래스
+```
+
+## API Reference
+ㅁㄴㅇㄹ
+
+
+## 과제를 하면서
+
+### 신경쓴 부분
+
+### 보완이 필요한 점
