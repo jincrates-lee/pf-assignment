@@ -3,7 +3,7 @@ package me.jincrates.pf.assignment.application.service;
 import static me.jincrates.pf.assignment.shared.util.ValueUtil.defaultIfNull;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -139,28 +139,26 @@ class ProductService implements ProductUseCase {
             .map(Product::id)
             .toList();
 
-        Map<Long, Long> productAverageScoreMap = reviewRepository.findAverageScoreByProductIdIn(productIds);
+        Map<Long, Double> productAverageScoreMap = reviewRepository.findAverageScoreByProductIdIn(productIds);
 
-        List<ProductSummary> productSummaries = new ArrayList<>();
-        products.forEach(product -> {
-            long avgScore = productAverageScoreMap.getOrDefault(
-                product.id(),
-                0L
-            );
-
-            ProductSummary summary = ProductSummary.builder()
-                .id(product.id())
-                .name(product.name())
-                .sellingPrice(product.sellingPrice())
-                .discountPrice(product.discountPrice())
-                .brand(product.brand())
-                .categories(product.categories())
-                .discountRate(product.calculateDiscountRate())
-                .reviewAverageScore(avgScore)
-                .build();
-
-            productSummaries.add(summary);
-        });
+        List<ProductSummary> productSummaries = products.stream()
+            .map(product -> {
+                double averageScore = productAverageScoreMap.getOrDefault(
+                    product.id(),
+                    0.0
+                );
+                return ProductSummary.builder()
+                    .id(product.id())
+                    .name(product.name())
+                    .sellingPrice(product.sellingPrice())
+                    .discountPrice(product.discountPrice())
+                    .brand(product.brand())
+                    .categories(product.categories())
+                    .discountRate(product.calculateDiscountRate())
+                    .reviewAverageScore(averageScore)
+                    .build();
+            })
+            .toList();
 
         return productSummaries.stream()
             .map(ProductService::toResponse)
@@ -194,13 +192,14 @@ class ProductService implements ProductUseCase {
 
     private static ProductSummaryResponse toResponse(final ProductSummary product) {
         List<CategoryResponse> categories = product.categories().stream()
+            .sorted(Comparator.comparing(Category::depth)) // depth 오름차순
             .map(ProductService::toResponse)
             .toList();
         return ProductSummaryResponse.builder()
             .id(product.id())
             .name(product.name())
-            .sellingPrice(product.sellingPrice().longValue())
-            .discountPrice(product.discountPrice().longValue())
+            .sellingPrice(product.sellingPrice())
+            .discountPrice(product.discountPrice())
             .brand(product.brand())
             .categories(categories)
             .discountRate(product.discountRate())

@@ -1,7 +1,5 @@
 package me.jincrates.pf.assignment.infrastructure.persistence.jpa;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -90,20 +88,16 @@ class ReviewRepositoryAdapter implements ReviewRepository {
     }
 
     /**
-     * 상품 ID별 리뷰 평균 점수 Map
+     * 상품 ID별 리뷰 평균 점수 Map(평균 점수는 소수점 둘째자리에서 반올림)
      */
     @Override
-    public Map<Long, Long> findAverageScoreByProductIdIn(final List<Long> productIds) {
+    public Map<Long, Double> findAverageScoreByProductIdIn(final List<Long> productIds) {
         List<ProductAverageScore> result = repository.findAverageScoreByProductIdIn(productIds);
         return result.stream()
             .collect(Collectors.toMap(
                     ProductAverageScore::productId,
-                    it -> BigDecimal.valueOf(it.averageScore())
-                        .setScale(
-                            2,
-                            RoundingMode.HALF_UP
-                        )
-                        .longValue()
+                    // 소수점 둘째자리에서 반올림
+                    it -> Math.round(it.averageScore() * 10.0) / 10.0
                 )
             );
     }

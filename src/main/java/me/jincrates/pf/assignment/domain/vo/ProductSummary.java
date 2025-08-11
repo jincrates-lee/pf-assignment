@@ -1,6 +1,5 @@
 package me.jincrates.pf.assignment.domain.vo;
 
-import java.math.BigDecimal;
 import java.util.List;
 import lombok.Builder;
 import me.jincrates.pf.assignment.domain.model.Category;
@@ -9,11 +8,11 @@ import me.jincrates.pf.assignment.domain.model.Category;
 public record ProductSummary(
     Long id,
     String name,
-    BigDecimal sellingPrice,
-    BigDecimal discountPrice,
+    Long sellingPrice,
+    Long discountPrice,
     String brand,
-    long discountRate,
-    long reviewAverageScore,
+    Long discountRate,
+    Double reviewAverageScore,
     List<Category> categories
 ) {
 

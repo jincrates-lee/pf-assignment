@@ -2,7 +2,6 @@ package me.jincrates.pf.assignment.bootstrap.http;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.math.BigDecimal;
 import java.util.List;
 import me.jincrates.pf.assignment.IntegrationTestSupport;
 import me.jincrates.pf.assignment.application.repository.CategoryRepository;
@@ -243,8 +242,8 @@ class ProductControllerIntegrationTest extends IntegrationTestSupport {
         void setUp() {
             savedProduct = productRepository.save(Product.builder()
                 .name("기존 상품")
-                .sellingPrice(BigDecimal.valueOf(30000))
-                .discountPrice(BigDecimal.valueOf(25000))
+                .sellingPrice(30000L)
+                .discountPrice(25000L)
                 .brand("기존 브랜드")
                 .categories(List.of(category1))
                 .build());
@@ -365,8 +364,8 @@ class ProductControllerIntegrationTest extends IntegrationTestSupport {
         void setUp() {
             savedProduct = productRepository.save(Product.builder()
                 .name("삭제할 상품")
-                .sellingPrice(BigDecimal.valueOf(30000))
-                .discountPrice(BigDecimal.valueOf(25000))
+                .sellingPrice(30000L)
+                .discountPrice(25000L)
                 .brand("테스트 브랜드")
                 .categories(List.of(category1))
                 .build());

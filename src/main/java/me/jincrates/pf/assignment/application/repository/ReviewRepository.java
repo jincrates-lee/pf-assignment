@@ -29,5 +29,5 @@ public interface ReviewRepository {
 
     List<Review> findAllByProductIdIn(List<Long> productIds);
 
-    Map<Long, Long> findAverageScoreByProductIdIn(List<Long> productIds);
+    Map<Long, Double> findAverageScoreByProductIdIn(List<Long> productIds);
 }

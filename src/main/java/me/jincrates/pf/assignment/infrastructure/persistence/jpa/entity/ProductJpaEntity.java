@@ -8,7 +8,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -38,13 +37,13 @@ public class ProductJpaEntity extends BaseTimeEntity {
     @Comment("상품 이름")
     private String name;
 
-    @Column(nullable = false, precision = 15, scale = 2)
+    @Column(nullable = false)
     @Comment("상품 판매가")
-    private BigDecimal sellingPrice;
+    private Long sellingPrice;
 
-    @Column(nullable = false, precision = 15, scale = 2)
+    @Column(nullable = false)
     @Comment("상품 할인가")
-    private BigDecimal discountPrice;
+    private Long discountPrice;
 
     @Column(nullable = false)
     @Comment("브랜드")
