@@ -1,5 +1,6 @@
 -- 카테고리 테이블 데이터 삽입
-INSERT INTO categories (name, depth, parent_id, created_at, updated_at) VALUES
+INSERT INTO categories (name, depth, parent_id, created_at, updated_at)
+VALUES
 -- 1차 카테고리
 ('강아지', 1, NULL, NOW(), NOW()),
 ('고양이', 1, NULL, NOW(), NOW()),
@@ -47,7 +48,8 @@ INSERT INTO categories (name, depth, parent_id, created_at, updated_at) VALUES
 ('캣타워/스크래처', 3, 10, NOW(), NOW());
 
 -- 상품 테이블 데이터 삽입
-INSERT INTO products (name, selling_price, discount_price, brand, created_at, updated_at) VALUES
+INSERT INTO products (name, selling_price, discount_price, brand, created_at, updated_at)
+VALUES
 -- 강아지 건사료
 ('로얄캐닌 독 어덜트', 89000.00, 79000.00, '로얄캐닌', NOW(), NOW()),
 ('힐스 사이언스 다이어트 어덜트', 72000.00, 65000.00, '힐스', NOW(), NOW()),
@@ -122,83 +124,168 @@ INSERT INTO products (name, selling_price, discount_price, brand, created_at, up
 ('레이저 포인터', 15000.00, 13500.00, '펫시안', NOW(), NOW());
 
 -- 상품-카테고리 연결 테이블 데이터 삽입
-INSERT INTO product_categories (product_id, category_id, created_at, updated_at) VALUES
+INSERT INTO product_categories (product_id, category_id, created_at, updated_at)
+VALUES
 -- 강아지 건사료 (카테고리: 강아지(1), 강아지 사료(3), 강아지 건사료(12))
-(1, 1, NOW(), NOW()), (1, 3, NOW(), NOW()), (1, 12, NOW(), NOW()),  -- 로얄캐닌 독 어덜트
-(2, 1, NOW(), NOW()), (2, 3, NOW(), NOW()), (2, 12, NOW(), NOW()),  -- 힐스 사이언스 다이어트 어덜트
-(3, 1, NOW(), NOW()), (3, 3, NOW(), NOW()), (3, 12, NOW(), NOW()),  -- 오리젠 어덜트 독
-(4, 1, NOW(), NOW()), (4, 3, NOW(), NOW()), (4, 12, NOW(), NOW()),  -- 아카나 그래스랜드 독
-(5, 1, NOW(), NOW()), (5, 3, NOW(), NOW()), (5, 12, NOW(), NOW()),  -- 퓨리나 프로플랜 어덜트
+(1, 1, NOW(), NOW()),
+(1, 3, NOW(), NOW()),
+(1, 12, NOW(), NOW()),  -- 로얄캐닌 독 어덜트
+(2, 1, NOW(), NOW()),
+(2, 3, NOW(), NOW()),
+(2, 12, NOW(), NOW()),  -- 힐스 사이언스 다이어트 어덜트
+(3, 1, NOW(), NOW()),
+(3, 3, NOW(), NOW()),
+(3, 12, NOW(), NOW()),  -- 오리젠 어덜트 독
+(4, 1, NOW(), NOW()),
+(4, 3, NOW(), NOW()),
+(4, 12, NOW(), NOW()),  -- 아카나 그래스랜드 독
+(5, 1, NOW(), NOW()),
+(5, 3, NOW(), NOW()),
+(5, 12, NOW(), NOW()),  -- 퓨리나 프로플랜 어덜트
 
 -- 강아지 습식사료 (카테고리: 강아지(1), 강아지 사료(3), 강아지 습식사료(13))
-(6, 1, NOW(), NOW()), (6, 3, NOW(), NOW()), (6, 13, NOW(), NOW()),  -- 로얄캐닌 웻푸드 캔
-(7, 1, NOW(), NOW()), (7, 3, NOW(), NOW()), (7, 13, NOW(), NOW()),  -- 힐스 습식사료 파우치
-(8, 1, NOW(), NOW()), (8, 3, NOW(), NOW()), (8, 13, NOW(), NOW()),  -- 웰니스 코어 캔사료
+(6, 1, NOW(), NOW()),
+(6, 3, NOW(), NOW()),
+(6, 13, NOW(), NOW()),  -- 로얄캐닌 웻푸드 캔
+(7, 1, NOW(), NOW()),
+(7, 3, NOW(), NOW()),
+(7, 13, NOW(), NOW()),  -- 힐스 습식사료 파우치
+(8, 1, NOW(), NOW()),
+(8, 3, NOW(), NOW()),
+(8, 13, NOW(), NOW()),  -- 웰니스 코어 캔사료
 
 -- 강아지 간식 (카테고리: 강아지(1), 강아지 간식(4), 세부 카테고리)
-(9, 1, NOW(), NOW()), (9, 4, NOW(), NOW()), (9, 16, NOW(), NOW()),  -- 그리니즈 덴탈트리트
-(10, 1, NOW(), NOW()), (10, 4, NOW(), NOW()), (10, 15, NOW(), NOW()), -- 자연별곡 소프트져키
-(11, 1, NOW(), NOW()), (11, 4, NOW(), NOW()), (11, 15, NOW(), NOW()), -- 프리즈드라이 닭가슴살
-(12, 1, NOW(), NOW()), (12, 4, NOW(), NOW()), (12, 16, NOW(), NOW()), -- 덴탈스틱 오리고기
+(9, 1, NOW(), NOW()),
+(9, 4, NOW(), NOW()),
+(9, 16, NOW(), NOW()),  -- 그리니즈 덴탈트리트
+(10, 1, NOW(), NOW()),
+(10, 4, NOW(), NOW()),
+(10, 15, NOW(), NOW()), -- 자연별곡 소프트져키
+(11, 1, NOW(), NOW()),
+(11, 4, NOW(), NOW()),
+(11, 15, NOW(), NOW()), -- 프리즈드라이 닭가슴살
+(12, 1, NOW(), NOW()),
+(12, 4, NOW(), NOW()),
+(12, 16, NOW(), NOW()), -- 덴탈스틱 오리고기
 
 -- 강아지 용품 (카테고리: 강아지(1), 강아지 용품(5), 세부 카테고리)
-(13, 1, NOW(), NOW()), (13, 5, NOW(), NOW()), (13, 18, NOW(), NOW()), -- 스테인리스 급식기 세트
-(14, 1, NOW(), NOW()), (14, 5, NOW(), NOW()), (14, 18, NOW(), NOW()), -- 자동급식기 스마트피더
-(15, 1, NOW(), NOW()), (15, 5, NOW(), NOW()), (15, 19, NOW(), NOW()), -- 체스트 하네스 세트
-(16, 1, NOW(), NOW()), (16, 5, NOW(), NOW()), (16, 19, NOW(), NOW()), -- 리트랙터블 리드줄
-(17, 1, NOW(), NOW()), (17, 5, NOW(), NOW()), (17, 20, NOW(), NOW()), -- 소프트 펫하우스
-(18, 1, NOW(), NOW()), (18, 5, NOW(), NOW()), (18, 20, NOW(), NOW()), -- 메모리폼 펫침대
+(13, 1, NOW(), NOW()),
+(13, 5, NOW(), NOW()),
+(13, 18, NOW(), NOW()), -- 스테인리스 급식기 세트
+(14, 1, NOW(), NOW()),
+(14, 5, NOW(), NOW()),
+(14, 18, NOW(), NOW()), -- 자동급식기 스마트피더
+(15, 1, NOW(), NOW()),
+(15, 5, NOW(), NOW()),
+(15, 19, NOW(), NOW()), -- 체스트 하네스 세트
+(16, 1, NOW(), NOW()),
+(16, 5, NOW(), NOW()),
+(16, 19, NOW(), NOW()), -- 리트랙터블 리드줄
+(17, 1, NOW(), NOW()),
+(17, 5, NOW(), NOW()),
+(17, 20, NOW(), NOW()), -- 소프트 펫하우스
+(18, 1, NOW(), NOW()),
+(18, 5, NOW(), NOW()),
+(18, 20, NOW(), NOW()), -- 메모리폼 펫침대
 
 -- 강아지 건강관리 (카테고리: 강아지(1), 강아지 건강관리(6))
-(19, 1, NOW(), NOW()), (19, 6, NOW(), NOW()), -- 강아지 종합영양제
-(20, 1, NOW(), NOW()), (20, 6, NOW(), NOW()), -- 강아지 관절영양제
-(21, 1, NOW(), NOW()), (21, 6, NOW(), NOW()), -- 강아지 전용 샴푸
+(19, 1, NOW(), NOW()),
+(19, 6, NOW(), NOW()),  -- 강아지 종합영양제
+(20, 1, NOW(), NOW()),
+(20, 6, NOW(), NOW()),  -- 강아지 관절영양제
+(21, 1, NOW(), NOW()),
+(21, 6, NOW(), NOW()),  -- 강아지 전용 샴푸
 
 -- 강아지 장난감 (카테고리: 강아지(1), 강아지 장난감(7))
-(22, 1, NOW(), NOW()), (22, 7, NOW(), NOW()), -- 로프 장난감 세트
-(23, 1, NOW(), NOW()), (23, 7, NOW(), NOW()), -- 삑삑이 러버토이
-(24, 1, NOW(), NOW()), (24, 7, NOW(), NOW()), -- 지능개발 퍼즐토이
+(22, 1, NOW(), NOW()),
+(22, 7, NOW(), NOW()),  -- 로프 장난감 세트
+(23, 1, NOW(), NOW()),
+(23, 7, NOW(), NOW()),  -- 삑삑이 러버토이
+(24, 1, NOW(), NOW()),
+(24, 7, NOW(), NOW()),  -- 지능개발 퍼즐토이
 
 -- 고양이 건사료 (카테고리: 고양이(2), 고양이 사료(8), 고양이 건사료(21))
-(25, 2, NOW(), NOW()), (25, 8, NOW(), NOW()), (25, 21, NOW(), NOW()), -- 로얄캐닌 캣 어덜트
-(26, 2, NOW(), NOW()), (26, 8, NOW(), NOW()), (26, 21, NOW(), NOW()), -- 힐스 사이언스 다이어트 캣
-(27, 2, NOW(), NOW()), (27, 8, NOW(), NOW()), (27, 21, NOW(), NOW()), -- 오리젠 캣 앤 키튼
-(28, 2, NOW(), NOW()), (28, 8, NOW(), NOW()), (28, 21, NOW(), NOW()), -- 아카나 와일드 프레리 캣
+(25, 2, NOW(), NOW()),
+(25, 8, NOW(), NOW()),
+(25, 21, NOW(), NOW()), -- 로얄캐닌 캣 어덜트
+(26, 2, NOW(), NOW()),
+(26, 8, NOW(), NOW()),
+(26, 21, NOW(), NOW()), -- 힐스 사이언스 다이어트 캣
+(27, 2, NOW(), NOW()),
+(27, 8, NOW(), NOW()),
+(27, 21, NOW(), NOW()), -- 오리젠 캣 앤 키튼
+(28, 2, NOW(), NOW()),
+(28, 8, NOW(), NOW()),
+(28, 21, NOW(), NOW()), -- 아카나 와일드 프레리 캣
 
 -- 고양이 습식사료 (카테고리: 고양이(2), 고양이 사료(8), 고양이 습식사료(22))
-(29, 2, NOW(), NOW()), (29, 8, NOW(), NOW()), (29, 22, NOW(), NOW()), -- 시바 캔 닭고기
-(30, 2, NOW(), NOW()), (30, 8, NOW(), NOW()), (30, 22, NOW(), NOW()), -- 위스카스 파우치 연어
-(31, 2, NOW(), NOW()), (31, 8, NOW(), NOW()), (31, 22, NOW(), NOW()), -- 로얄캐닌 캣 습식사료
+(29, 2, NOW(), NOW()),
+(29, 8, NOW(), NOW()),
+(29, 22, NOW(), NOW()), -- 시바 캔 닭고기
+(30, 2, NOW(), NOW()),
+(30, 8, NOW(), NOW()),
+(30, 22, NOW(), NOW()), -- 위스카스 파우치 연어
+(31, 2, NOW(), NOW()),
+(31, 8, NOW(), NOW()),
+(31, 22, NOW(), NOW()), -- 로얄캐닌 캣 습식사료
 
 -- 고양이 간식 (카테고리: 고양이(2), 고양이 간식(9), 세부 카테고리)
-(32, 2, NOW(), NOW()), (32, 9, NOW(), NOW()), (32, 23, NOW(), NOW()), -- 츄루 닭고기맛
-(33, 2, NOW(), NOW()), (33, 9, NOW(), NOW()), (33, 23, NOW(), NOW()), -- 캣닙 트리트
-(34, 2, NOW(), NOW()), (34, 9, NOW(), NOW()), (34, 23, NOW(), NOW()), -- 프리즈드라이 참치
-(35, 2, NOW(), NOW()), (35, 9, NOW(), NOW()), (35, 24, NOW(), NOW()), -- 고양이 덴탈 간식
+(32, 2, NOW(), NOW()),
+(32, 9, NOW(), NOW()),
+(32, 23, NOW(), NOW()), -- 츄루 닭고기맛
+(33, 2, NOW(), NOW()),
+(33, 9, NOW(), NOW()),
+(33, 23, NOW(), NOW()), -- 캣닙 트리트
+(34, 2, NOW(), NOW()),
+(34, 9, NOW(), NOW()),
+(34, 23, NOW(), NOW()), -- 프리즈드라이 참치
+(35, 2, NOW(), NOW()),
+(35, 9, NOW(), NOW()),
+(35, 24, NOW(), NOW()), -- 고양이 덴탈 간식
 
 -- 고양이 용품 (카테고리: 고양이(2), 고양이 용품(10), 세부 카테고리)
-(36, 2, NOW(), NOW()), (36, 10, NOW(), NOW()), (36, 25, NOW(), NOW()), -- 고양이 자동급식기
-(37, 2, NOW(), NOW()), (37, 10, NOW(), NOW()), (37, 25, NOW(), NOW()), -- 세라믹 급수대
-(38, 2, NOW(), NOW()), (38, 10, NOW(), NOW()), (38, 26, NOW(), NOW()), -- 자동 화장실
-(39, 2, NOW(), NOW()), (39, 10, NOW(), NOW()), (39, 26, NOW(), NOW()), -- 벤토나이트 모래
+(36, 2, NOW(), NOW()),
+(36, 10, NOW(), NOW()),
+(36, 25, NOW(), NOW()), -- 고양이 자동급식기
+(37, 2, NOW(), NOW()),
+(37, 10, NOW(), NOW()),
+(37, 25, NOW(), NOW()), -- 세라믹 급수대
+(38, 2, NOW(), NOW()),
+(38, 10, NOW(), NOW()),
+(38, 26, NOW(), NOW()), -- 자동 화장실
+(39, 2, NOW(), NOW()),
+(39, 10, NOW(), NOW()),
+(39, 26, NOW(), NOW()), -- 벤토나이트 모래
 
 -- 캣타워/스크래처 (카테고리: 고양이(2), 고양이 용품(10), 캣타워/스크래처(27))
-(40, 2, NOW(), NOW()), (40, 10, NOW(), NOW()), (40, 27, NOW(), NOW()), -- 대형 캣타워
-(41, 2, NOW(), NOW()), (41, 10, NOW(), NOW()), (41, 27, NOW(), NOW()), -- 골판지 스크래처
+(40, 2, NOW(), NOW()),
+(40, 10, NOW(), NOW()),
+(40, 27, NOW(), NOW()), -- 대형 캣타워
+(41, 2, NOW(), NOW()),
+(41, 10, NOW(), NOW()),
+(41, 27, NOW(), NOW()), -- 골판지 스크래처
 
 -- 고양이 건강관리 (카테고리: 고양이(2), 고양이 건강관리(11))
-(42, 2, NOW(), NOW()), (42, 11, NOW(), NOW()), -- 고양이 종합영양제
-(43, 2, NOW(), NOW()), (43, 11, NOW(), NOW()), -- 헤어볼 케어
-(44, 2, NOW(), NOW()), (44, 11, NOW(), NOW()), -- 고양이 전용 샴푸
+(42, 2, NOW(), NOW()),
+(42, 11, NOW(), NOW()), -- 고양이 종합영양제
+(43, 2, NOW(), NOW()),
+(43, 11, NOW(), NOW()), -- 헤어볼 케어
+(44, 2, NOW(), NOW()),
+(44, 11, NOW(), NOW()), -- 고양이 전용 샴푸
 
 -- 고양이 장난감 (카테고리: 고양이(2), 고양이 장난감(12))
-(45, 2, NOW(), NOW()), (45, 12, NOW(), NOW()), -- 깃털 낚싯대
-(46, 2, NOW(), NOW()), (46, 12, NOW(), NOW()), -- 캣닢 마우스
-(47, 2, NOW(), NOW()), (47, 12, NOW(), NOW()); -- 레이저 포인터
+(45, 2, NOW(), NOW()),
+(45, 12, NOW(), NOW()), -- 깃털 낚싯대
+(46, 2, NOW(), NOW()),
+(46, 12, NOW(), NOW()), -- 캣닢 마우스
+(47, 2, NOW(), NOW()),
+(47, 12, NOW(), NOW());
+-- 레이저 포인터
 
 
 -- 리뷰 테이블 데이터 삽입
-INSERT INTO reviews (product_id, content, score, created_at, updated_at) VALUES
+INSERT INTO reviews (product_id, content, score, created_at, updated_at)
+VALUES
 -- 강아지 건사료 리뷰
 (1, '우리 강아지가 너무 잘 먹어요! 털도 윤기가 나고 건강해졌어요.', 5, NOW() - INTERVAL '10' DAY, NOW() - INTERVAL '10' DAY),
 (1, '가격이 좀 비싸긴 하지만 품질이 좋아서 계속 구매할 예정입니다.', 4, NOW() - INTERVAL '8' DAY, NOW() - INTERVAL '8' DAY),
@@ -232,10 +319,10 @@ INSERT INTO reviews (product_id, content, score, created_at, updated_at) VALUES
 (3, '알레르기가 있던 우리 강아지도 잘 먹어요.', 5, NOW() - INTERVAL '1' DAY, NOW() - INTERVAL '1' DAY),
 
 -- 강아지 습식사료 리뷰
-(6, '캔 사료 중에서는 최고인 것 같아요. 강아지가 너무 좋아해요.', 5, NOW() - INTERVAL '9' DAY, NOW() - INTERVAL '9' DAY),
+(6, '캔 사료 중에서는 최고인 것 같아요. 강아지가 너무 좋아해요.', 3, NOW() - INTERVAL '9' DAY, NOW() - INTERVAL '9' DAY),
 (6, '건사료와 섞어서 주니까 더 잘 먹네요.', 4, NOW() - INTERVAL '6' DAY, NOW() - INTERVAL '6' DAY),
 
-(7, '파우치 포장이 편리해서 좋아요. 맛도 좋은 것 같습니다.', 4, NOW() - INTERVAL '11' DAY, NOW() - INTERVAL '11' DAY),
+(7, '파우치 포장이 편리해서 좋아요. 맛도 좋은 것 같습니다.', 1, NOW() - INTERVAL '11' DAY, NOW() - INTERVAL '11' DAY),
 (7, '우리 강아지가 까다로운데도 잘 먹어요.', 5, NOW() - INTERVAL '4' DAY, NOW() - INTERVAL '4' DAY),
 
 -- 강아지 간식 리뷰
@@ -258,7 +345,8 @@ INSERT INTO reviews (product_id, content, score, created_at, updated_at) VALUES
 (25, '로얄캐닌은 믿고 사는 브랜드입니다.', 5, NOW() - INTERVAL '10' DAY, NOW() - INTERVAL '10' DAY),
 (25, '까다로운 우리 고양이도 잘 먹어요.', 4, NOW() - INTERVAL '3' DAY, NOW() - INTERVAL '3' DAY),
 
-(26, '힐스 사료는 항상 품질이 좋아요. 소화도 잘 되는 것 같습니다.', 4, NOW() - INTERVAL '12' DAY, NOW() - INTERVAL '12' DAY),
+(26, '힐스 사료는 항상 품질이 좋아요. 소화도 잘 되는 것 같습니다.', 4, NOW() - INTERVAL '12' DAY,
+ NOW() - INTERVAL '12' DAY),
 (26, '가격이 적당하고 품질도 만족스러워요.', 4, NOW() - INTERVAL '6' DAY, NOW() - INTERVAL '6' DAY),
 
 -- 고양이 습식사료 리뷰

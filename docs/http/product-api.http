@@ -25,3 +25,6 @@ Content-Type: application/json
 ### 상품 삭제
 DELETE {{backend-api}}/api/products/5
 
+
+### 상품 목록 조회
+GET {{backend-api}}/api/products?categoryId=3

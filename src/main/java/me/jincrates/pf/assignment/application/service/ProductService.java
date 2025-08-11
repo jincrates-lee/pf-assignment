@@ -3,6 +3,7 @@ package me.jincrates.pf.assignment.application.service;
 import static me.jincrates.pf.assignment.shared.util.ValueUtil.defaultIfNull;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -10,14 +11,19 @@ import lombok.RequiredArgsConstructor;
 import me.jincrates.pf.assignment.application.ProductUseCase;
 import me.jincrates.pf.assignment.application.dto.CreateProductRequest;
 import me.jincrates.pf.assignment.application.dto.CreateProductResponse;
+import me.jincrates.pf.assignment.application.dto.GetAllProductsQuery;
+import me.jincrates.pf.assignment.application.dto.ProductSummaryResponse;
+import me.jincrates.pf.assignment.application.dto.ProductSummaryResponse.CategoryResponse;
 import me.jincrates.pf.assignment.application.dto.UpdateProductRequest;
 import me.jincrates.pf.assignment.application.dto.UpdateProductResponse;
 import me.jincrates.pf.assignment.application.repository.CategoryRepository;
 import me.jincrates.pf.assignment.application.repository.ProductRepository;
+import me.jincrates.pf.assignment.application.repository.ReviewRepository;
 import me.jincrates.pf.assignment.domain.event.ProductDeleted;
 import me.jincrates.pf.assignment.domain.exception.BusinessException;
 import me.jincrates.pf.assignment.domain.model.Category;
 import me.jincrates.pf.assignment.domain.model.Product;
+import me.jincrates.pf.assignment.domain.vo.ProductSummary;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +34,7 @@ class ProductService implements ProductUseCase {
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final ReviewRepository reviewRepository;
     private final ApplicationEventPublisher eventPublisher;
 
     @Override
@@ -119,6 +126,47 @@ class ProductService implements ProductUseCase {
         );
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<ProductSummaryResponse> getAllProductsByCategoryId(final GetAllProductsQuery query) {
+        List<Product> products = productRepository.findAllByCategoryId(
+            query.categoryId(),
+            query.sort(),
+            query.pageSize()
+        );
+
+        List<Long> productIds = products.stream()
+            .map(Product::id)
+            .toList();
+
+        Map<Long, Long> productAverageScoreMap = reviewRepository.findAverageScoreByProductIdIn(productIds);
+
+        List<ProductSummary> productSummaries = new ArrayList<>();
+        products.forEach(product -> {
+            long avgScore = productAverageScoreMap.getOrDefault(
+                product.id(),
+                0L
+            );
+
+            ProductSummary summary = ProductSummary.builder()
+                .id(product.id())
+                .name(product.name())
+                .sellingPrice(product.sellingPrice())
+                .discountPrice(product.discountPrice())
+                .brand(product.brand())
+                .categories(product.categories())
+                .discountRate(product.calculateDiscountRate())
+                .reviewAverageScore(avgScore)
+                .build();
+
+            productSummaries.add(summary);
+        });
+
+        return productSummaries.stream()
+            .map(ProductService::toResponse)
+            .toList();
+    }
+
     private List<Category> validatedCategories(final Set<Long> categoryIds) {
         List<Category> categories = categoryRepository.findAllByIdIn(categoryIds);
         if (categories.isEmpty()) {
@@ -142,5 +190,30 @@ class ProductService implements ProductUseCase {
         }
 
         return categories;
+    }
+
+    private static ProductSummaryResponse toResponse(final ProductSummary product) {
+        List<CategoryResponse> categories = product.categories().stream()
+            .map(ProductService::toResponse)
+            .toList();
+        return ProductSummaryResponse.builder()
+            .id(product.id())
+            .name(product.name())
+            .sellingPrice(product.sellingPrice().longValue())
+            .discountPrice(product.discountPrice().longValue())
+            .brand(product.brand())
+            .categories(categories)
+            .discountRate(product.discountRate())
+            .reviewAverageScore(product.reviewAverageScore())
+            .build();
+    }
+
+    private static CategoryResponse toResponse(final Category category) {
+        return CategoryResponse.builder()
+            .id(category.id())
+            .name(category.name())
+            .depth(category.depth())
+            .parent(category.parent() == null ? null : toResponse(category.parent()))
+            .build();
     }
 }

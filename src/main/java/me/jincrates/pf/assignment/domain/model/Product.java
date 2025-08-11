@@ -1,6 +1,7 @@
 package me.jincrates.pf.assignment.domain.model;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import lombok.Builder;
 import me.jincrates.pf.assignment.domain.exception.BusinessException;
@@ -34,5 +35,20 @@ public record Product(
         if (categories == null || categories.isEmpty()) {
             throw new BusinessException("상품 카테고리 목록은 필수입니다.");
         }
+    }
+
+    /**
+     * 할인율 = 할인가 / 판매가 * 100
+     *
+     * @return 할인율(소수점 첫번쨰 자리에서 반올림)
+     */
+    public long calculateDiscountRate() {
+        return discountPrice.divide(
+                sellingPrice,
+                1,
+                RoundingMode.HALF_UP
+            )
+            .multiply(BigDecimal.valueOf(100))
+            .longValue();
     }
 }

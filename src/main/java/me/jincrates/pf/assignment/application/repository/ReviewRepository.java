@@ -1,5 +1,7 @@
 package me.jincrates.pf.assignment.application.repository;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import me.jincrates.pf.assignment.domain.model.Review;
 
@@ -16,4 +18,8 @@ public interface ReviewRepository {
     void deleteById(Long reviewId);
 
     void deleteAllByProductId(Long productId);
+
+    List<Review> findAllByProductIdIn(List<Long> productIds);
+
+    Map<Long, Long> findAverageScoreByProductIdIn(List<Long> productIds);
 }
