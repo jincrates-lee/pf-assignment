@@ -65,10 +65,9 @@ class ReviewRepositoryAdapter implements ReviewRepository {
         final ReviewSortType sort,
         final PageSize pageSize
     ) {
-
         PageRequest pageable = PageRequest.of(
             pageSize.page(),
-            pageSize.size() + 1,
+            pageSize.size(),
             sort.toSort()
         );
 

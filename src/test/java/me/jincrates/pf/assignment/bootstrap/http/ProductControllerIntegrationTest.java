@@ -6,8 +6,10 @@ import java.util.List;
 import me.jincrates.pf.assignment.IntegrationTestSupport;
 import me.jincrates.pf.assignment.application.repository.CategoryRepository;
 import me.jincrates.pf.assignment.application.repository.ProductRepository;
+import me.jincrates.pf.assignment.application.repository.ReviewRepository;
 import me.jincrates.pf.assignment.domain.model.Category;
 import me.jincrates.pf.assignment.domain.model.Product;
+import me.jincrates.pf.assignment.domain.model.Review;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -25,6 +27,9 @@ class ProductControllerIntegrationTest extends IntegrationTestSupport {
 
     @Autowired
     private CategoryRepository categoryRepository;
+
+    @Autowired
+    private ReviewRepository reviewRepository;
 
     private Category category1;
     private Category category2;
@@ -456,7 +461,7 @@ class ProductControllerIntegrationTest extends IntegrationTestSupport {
         @Test
         @DisplayName("카테고리 ID로 상품 목록을 조회할 수 있다")
         void getAllProductsByCategoryId_WithValidCategoryId_Success() {
-            // when & then
+            // when
             webTestClient.get()
                 .uri(uriBuilder -> uriBuilder
                     .path("/api/products")
@@ -466,20 +471,21 @@ class ProductControllerIntegrationTest extends IntegrationTestSupport {
                     )
                     .build())
                 .exchange()
+                // then
                 .expectStatus().isOk()
                 .expectBody()
                 .jsonPath("$.success").isEqualTo(true)
                 .jsonPath("$.message").isEqualTo(null)
                 .jsonPath("$.data.page").isEqualTo(0)
-                .jsonPath("$.data.contents").isArray()
-                .jsonPath("$.data.contents.length()")
+                .jsonPath("$.data.items").isArray()
+                .jsonPath("$.data.items.length()")
                 .isEqualTo(2); // category1에 속한 product1, product3
         }
 
         @Test
         @DisplayName("정렬 옵션을 적용하여 상품 목록을 조회할 수 있다 - 낮은가격순")
         void getAllProductsByCategoryId_WithPriceAscSort_Success() {
-            // when & then
+            // when
             webTestClient.get()
                 .uri(uriBuilder -> uriBuilder
                     .path("/api/products")
@@ -493,18 +499,19 @@ class ProductControllerIntegrationTest extends IntegrationTestSupport {
                     )
                     .build())
                 .exchange()
+                // then
                 .expectStatus().isOk()
                 .expectBody()
                 .jsonPath("$.success").isEqualTo(true)
-                .jsonPath("$.data.contents").isArray()
-                .jsonPath("$.data.contents[0].sellingPrice").isEqualTo(15000) // product1이 먼저
-                .jsonPath("$.data.contents[1].sellingPrice").isEqualTo(48800); // product3이 다음
+                .jsonPath("$.data.items").isArray()
+                .jsonPath("$.data.items[0].sellingPrice").isEqualTo(15000) // product1이 먼저
+                .jsonPath("$.data.items[1].sellingPrice").isEqualTo(48800); // product3이 다음
         }
 
         @Test
         @DisplayName("정렬 옵션을 적용하여 상품 목록을 조회할 수 있다 - 리뷰많은순")
         void getAllProductsByCategoryId_WithReviewDescSort_Success() {
-            // when & then
+            // when
             webTestClient.get()
                 .uri(uriBuilder -> uriBuilder
                     .path("/api/products")
@@ -518,17 +525,18 @@ class ProductControllerIntegrationTest extends IntegrationTestSupport {
                     )
                     .build())
                 .exchange()
+                // then
                 .expectStatus().isOk()
                 .expectBody()
                 .jsonPath("$.success").isEqualTo(true)
-                .jsonPath("$.data.contents").isArray()
-                .jsonPath("$.data.contents.length()").isEqualTo(1); // category2에 속한 product2만
+                .jsonPath("$.data.items").isArray()
+                .jsonPath("$.data.items.length()").isEqualTo(1); // category2에 속한 product2만
         }
 
         @Test
         @DisplayName("페이지네이션을 적용하여 상품 목록을 조회할 수 있다")
         void getAllProductsByCategoryId_WithPagination_Success() {
-            // when & then
+            // when
             webTestClient.get()
                 .uri(uriBuilder -> uriBuilder
                     .path("/api/products")
@@ -546,18 +554,19 @@ class ProductControllerIntegrationTest extends IntegrationTestSupport {
                     )
                     .build())
                 .exchange()
+                // then
                 .expectStatus().isOk()
                 .expectBody()
                 .jsonPath("$.success").isEqualTo(true)
                 .jsonPath("$.data.page").isEqualTo(0)
-                .jsonPath("$.data.contents").isArray()
-                .jsonPath("$.data.contents.length()").isEqualTo(1); // 한 페이지에 1개만
+                .jsonPath("$.data.items").isArray()
+                .jsonPath("$.data.items.length()").isEqualTo(1); // 한 페이지에 1개만
         }
 
         @Test
         @DisplayName("기본값으로 상품 목록을 조회할 수 있다")
         void getAllProductsByCategoryId_WithDefaultParameters_Success() {
-            // when & then
+            // when
             webTestClient.get()
                 .uri(uriBuilder -> uriBuilder
                     .path("/api/products")
@@ -567,11 +576,12 @@ class ProductControllerIntegrationTest extends IntegrationTestSupport {
                     )
                     .build())
                 .exchange()
+                // then
                 .expectStatus().isOk()
                 .expectBody()
                 .jsonPath("$.success").isEqualTo(true)
                 .jsonPath("$.data.page").isEqualTo(0) // 기본값
-                .jsonPath("$.data.contents").isArray();
+                .jsonPath("$.data.items").isArray();
         }
 
         @Test
@@ -580,7 +590,7 @@ class ProductControllerIntegrationTest extends IntegrationTestSupport {
             // given
             Long nonExistentCategoryId = 999L;
 
-            // when & then
+            // when
             webTestClient.get()
                 .uri(uriBuilder -> uriBuilder
                     .path("/api/products")
@@ -590,17 +600,18 @@ class ProductControllerIntegrationTest extends IntegrationTestSupport {
                     )
                     .build())
                 .exchange()
+                // then
                 .expectStatus().isOk()
                 .expectBody()
                 .jsonPath("$.success").isEqualTo(true)
-                .jsonPath("$.data.contents").isArray()
-                .jsonPath("$.data.contents.length()").isEqualTo(0);
+                .jsonPath("$.data.items").isArray()
+                .jsonPath("$.data.items.length()").isEqualTo(0);
         }
 
         @Test
         @DisplayName("잘못된 정렬 옵션으로 조회 시 실패한다")
         void getAllProductsByCategoryId_WithInvalidSort_BadRequest() {
-            // when & then
+            // when
             webTestClient.get()
                 .uri(uriBuilder -> uriBuilder
                     .path("/api/products")
@@ -614,6 +625,7 @@ class ProductControllerIntegrationTest extends IntegrationTestSupport {
                     )
                     .build())
                 .exchange()
+                // then
                 .expectStatus().isBadRequest()
                 .expectBody()
                 .jsonPath("$.success").isEqualTo(false)
@@ -623,7 +635,7 @@ class ProductControllerIntegrationTest extends IntegrationTestSupport {
         @Test
         @DisplayName("음수 페이지 번호로 조회 시 실패한다")
         void getAllProductsByCategoryId_WithNegativePage_BadRequest() {
-            // when & then
+            // when
             webTestClient.get()
                 .uri(uriBuilder -> uriBuilder
                     .path("/api/products")
@@ -637,6 +649,7 @@ class ProductControllerIntegrationTest extends IntegrationTestSupport {
                     )
                     .build())
                 .exchange()
+                // then
                 .expectStatus().isBadRequest()
                 .expectBody()
                 .jsonPath("$.success").isEqualTo(false)
@@ -646,7 +659,7 @@ class ProductControllerIntegrationTest extends IntegrationTestSupport {
         @Test
         @DisplayName("음수 페이지 크기로 조회 시 실패한다")
         void getAllProductsByCategoryId_WithNegativeSize_BadRequest() {
-            // when & then
+            // when
             webTestClient.get()
                 .uri(uriBuilder -> uriBuilder
                     .path("/api/products")
@@ -660,6 +673,7 @@ class ProductControllerIntegrationTest extends IntegrationTestSupport {
                     )
                     .build())
                 .exchange()
+                // then
                 .expectStatus().isBadRequest()
                 .expectBody()
                 .jsonPath("$.success").isEqualTo(false)
@@ -669,7 +683,7 @@ class ProductControllerIntegrationTest extends IntegrationTestSupport {
         @Test
         @DisplayName("상품 응답에 필요한 필드들이 모두 포함되어야 한다")
         void getAllProductsByCategoryId_ResponseContainsAllRequiredFields() {
-            // when & then
+            // when
             webTestClient.get()
                 .uri(uriBuilder -> uriBuilder
                     .path("/api/products")
@@ -679,17 +693,18 @@ class ProductControllerIntegrationTest extends IntegrationTestSupport {
                     )
                     .build())
                 .exchange()
+                // then
                 .expectStatus().isOk()
                 .expectBody()
-                .jsonPath("$.data.contents[0].id").exists()
-                .jsonPath("$.data.contents[0].name").exists()
-                .jsonPath("$.data.contents[0].sellingPrice").exists()
-                .jsonPath("$.data.contents[0].discountPrice").exists()
-                .jsonPath("$.data.contents[0].brand").exists()
-                .jsonPath("$.data.contents[0].discountRate").exists()
-                .jsonPath("$.data.contents[0].reviewAverageScore").exists()
-                .jsonPath("$.data.contents[0].categories").exists()
-                .jsonPath("$.data.contents[0].categories").isArray();
+                .jsonPath("$.data.items[0].id").exists()
+                .jsonPath("$.data.items[0].name").exists()
+                .jsonPath("$.data.items[0].sellingPrice").exists()
+                .jsonPath("$.data.items[0].discountPrice").exists()
+                .jsonPath("$.data.items[0].brand").exists()
+                .jsonPath("$.data.items[0].discountRate").exists()
+                .jsonPath("$.data.items[0].reviewAverageScore").exists()
+                .jsonPath("$.data.items[0].categories").exists()
+                .jsonPath("$.data.items[0].categories").isArray();
         }
 
     }
@@ -698,5 +713,355 @@ class ProductControllerIntegrationTest extends IntegrationTestSupport {
     @DisplayName("상품 기준 리뷰 목록 조회 테스트")
     class GetReviewListByProductTest {
 
+        private Product product1, product2;
+        private Review review1, review2, review3, review4;
+
+        @BeforeEach
+        void setUpReviews() {
+            // 테스트용 상품 생성
+            product1 = productRepository.save(Product.builder()
+                .name("테스트 상품 1")
+                .sellingPrice(30000L)
+                .discountPrice(25000L)
+                .brand("테스트 브랜드")
+                .categories(List.of(category1))
+                .build());
+
+            product2 = productRepository.save(Product.builder()
+                .name("테스트 상품 2")
+                .sellingPrice(40000L)
+                .discountPrice(35000L)
+                .brand("테스트 브랜드")
+                .categories(List.of(category2))
+                .build());
+
+            // 테스트용 리뷰 데이터 생성 (product1용)
+            review1 = reviewRepository.save(Review.builder()
+                .productId(product1.id())
+                .content("정말 좋은 상품입니다. 강아지가 너무 좋아해요!")
+                .score(5)
+                .build());
+
+            review2 = reviewRepository.save(Review.builder()
+                .productId(product1.id())
+                .content("배송이 빠르고 포장도 깔끔했습니다.")
+                .score(4)
+                .build());
+
+            review3 = reviewRepository.save(Review.builder()
+                .productId(product1.id())
+                .content("가격대비 만족스럽습니다.")
+                .score(3)
+                .build());
+
+            // product2용 리뷰
+            review4 = reviewRepository.save(Review.builder()
+                .productId(product2.id())
+                .content("다른 상품 리뷰입니다.")
+                .score(5)
+                .build());
+        }
+
+        @Test
+        @DisplayName("상품 ID로 리뷰 목록을 조회할 수 있다")
+        void getAllReviewsByProductId_WithValidProductId_Success() {
+            // when
+            webTestClient.get()
+                .uri(
+                    "/api/products/{productId}/reviews",
+                    product1.id()
+                )
+                .exchange()
+
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.success").isEqualTo(true)
+                .jsonPath("$.message").isEqualTo(null)
+                .jsonPath("$.data.page").isEqualTo(0)
+                .jsonPath("$.data.items").isArray()
+                .jsonPath("$.data.items.length()").isEqualTo(3); // product1에 대한 리뷰 3개
+        }
+
+        @Test
+        @DisplayName("기본 정렬(최근 등록순)으로 리뷰 목록을 조회할 수 있다")
+        void getAllReviewsByProductId_WithDefaultSort_Success() {
+            // when
+            webTestClient.get()
+                .uri(
+                    "/api/products/{productId}/reviews",
+                    product1.id()
+                )
+                .exchange()
+                // then
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.success").isEqualTo(true)
+                .jsonPath("$.data.items").isArray()
+                .jsonPath("$.data.items[0].id").isEqualTo(review3.id()) // 가장 최근에 생성된 리뷰
+                .jsonPath("$.data.items[1].id").isEqualTo(review2.id())
+                .jsonPath("$.data.items[2].id").isEqualTo(review1.id()); // 가장 처음에 생성된 리뷰
+        }
+
+        @Test
+        @DisplayName("정렬 옵션을 지정하여 리뷰 목록을 조회할 수 있다 - 최근 등록순")
+        void getAllReviewsByProductId_WithCreatedDescSort_Success() {
+            // when
+            webTestClient.get()
+                .uri(uriBuilder -> uriBuilder
+                    .path("/api/products/{productId}/reviews")
+                    .queryParam(
+                        "sort",
+                        "created_desc"
+                    )
+                    .build(product1.id()))
+                .exchange()
+                // then
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.success").isEqualTo(true)
+                .jsonPath("$.data.items").isArray()
+                .jsonPath("$.data.items[0].id").isEqualTo(review3.id()); // 가장 최근 리뷰가 먼저
+        }
+
+        @Test
+        @DisplayName("페이지네이션을 적용하여 리뷰 목록을 조회할 수 있다")
+        void getAllReviewsByProductId_WithPagination_Success() {
+            // when
+            webTestClient.get()
+                .uri(uriBuilder -> uriBuilder
+                    .path("/api/products/{productId}/reviews")
+                    .queryParam(
+                        "page",
+                        0
+                    )
+                    .queryParam(
+                        "size",
+                        2
+                    )
+                    .build(product1.id()))
+                .exchange()
+                // then
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.success").isEqualTo(true)
+                .jsonPath("$.data.page").isEqualTo(0)
+                .jsonPath("$.data.items").isArray()
+                .jsonPath("$.data.items.length()").isEqualTo(2); // 한 페이지에 2개만
+        }
+
+        @Test
+        @DisplayName("두 번째 페이지 리뷰 목록을 조회할 수 있다")
+        void getAllReviewsByProductId_WithSecondPage_Success() {
+            // when
+            webTestClient.get()
+                .uri(uriBuilder -> uriBuilder
+                    .path("/api/products/{productId}/reviews")
+                    .queryParam(
+                        "page",
+                        1
+                    )
+                    .queryParam(
+                        "size",
+                        2
+                    )
+                    .build(product1.id()))
+                .exchange()
+                // then
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.success").isEqualTo(true)
+                .jsonPath("$.data.page").isEqualTo(1)
+                .jsonPath("$.data.items").isArray()
+                .jsonPath("$.data.items.length()").isEqualTo(1); // 남은 리뷰 1개
+        }
+
+        @Test
+        @DisplayName("기본값으로 리뷰 목록을 조회할 수 있다")
+        void getAllReviewsByProductId_WithDefaultParameters_Success() {
+            // when
+            webTestClient.get()
+                .uri(
+                    "/api/products/{productId}/reviews",
+                    product1.id()
+                )
+                .exchange()
+                // then
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.success").isEqualTo(true)
+                .jsonPath("$.data.page").isEqualTo(0) // 기본 페이지
+                .jsonPath("$.data.items").isArray();
+        }
+
+        @Test
+        @DisplayName("존재하지 않는 상품 ID로 조회 시 빈 결과를 반환한다")
+        void getAllReviewsByProductId_WithNonExistentProductId_EmptyResult() {
+            // given
+            Long nonExistentProductId = 999L;
+
+            // when
+            webTestClient.get()
+                .uri(
+                    "/api/products/{productId}/reviews",
+                    nonExistentProductId
+                )
+                .exchange()
+                // then
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.success").isEqualTo(true)
+                .jsonPath("$.data.items").isArray()
+                .jsonPath("$.data.items.length()").isEqualTo(0);
+        }
+
+        @Test
+        @DisplayName("리뷰가 없는 상품 조회 시 빈 결과를 반환한다")
+        void getAllReviewsByProductId_WithProductHavingNoReviews_EmptyResult() {
+            // given - product2는 리뷰 1개만 있으므로, 새로운 상품 생성
+            Product productWithoutReviews = productRepository.save(Product.builder()
+                .name("리뷰 없는 상품")
+                .sellingPrice(20000L)
+                .discountPrice(18000L)
+                .brand("테스트 브랜드")
+                .categories(List.of(category1))
+                .build());
+
+            // when
+            webTestClient.get()
+                .uri(
+                    "/api/products/{productId}/reviews",
+                    productWithoutReviews.id()
+                )
+                .exchange()
+                // then
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.success").isEqualTo(true)
+                .jsonPath("$.data.items").isArray()
+                .jsonPath("$.data.items.length()").isEqualTo(0);
+        }
+
+        @Test
+        @DisplayName("잘못된 정렬 옵션으로 조회 시 실패한다")
+        void getAllReviewsByProductId_WithInvalidSort_BadRequest() {
+            // when
+            webTestClient.get()
+                .uri(uriBuilder -> uriBuilder
+                    .path("/api/products/{productId}/reviews")
+                    .queryParam(
+                        "sort",
+                        "invalid_sort"
+                    )
+                    .build(product1.id()))
+                .exchange()
+                // then
+                .expectStatus().isBadRequest()
+                .expectBody()
+                .jsonPath("$.success").isEqualTo(false)
+                .jsonPath("$.message").exists();
+        }
+
+        @Test
+        @DisplayName("음수 페이지 번호로 조회 시 실패한다")
+        void getAllReviewsByProductId_WithNegativePage_BadRequest() {
+            // when
+            webTestClient.get()
+                .uri(uriBuilder -> uriBuilder
+                    .path("/api/products/{productId}/reviews")
+                    .queryParam(
+                        "page",
+                        -1
+                    )
+                    .build(product1.id()))
+                .exchange()
+                // then
+                .expectStatus().isBadRequest()
+                .expectBody()
+                .jsonPath("$.success").isEqualTo(false)
+                .jsonPath("$.message").exists();
+        }
+
+        @Test
+        @DisplayName("음수 페이지 크기로 조회 시 실패한다")
+        void getAllReviewsByProductId_WithNegativeSize_BadRequest() {
+            // when
+            webTestClient.get()
+                .uri(uriBuilder -> uriBuilder
+                    .path("/api/products/{productId}/reviews")
+                    .queryParam(
+                        "size",
+                        -1
+                    )
+                    .build(product1.id()))
+                .exchange()
+                // then
+                .expectStatus().isBadRequest()
+                .expectBody()
+                .jsonPath("$.success").isEqualTo(false)
+                .jsonPath("$.message").exists();
+        }
+
+        @Test
+        @DisplayName("리뷰 응답에 필요한 필드들이 모두 포함되어야 한다")
+        void getAllReviewsByProductId_ResponseContainsAllRequiredFields() {
+            // when
+            webTestClient.get()
+                .uri(
+                    "/api/products/{productId}/reviews",
+                    product1.id()
+                )
+                .exchange()
+                // then
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.data.items[0].id").exists()
+                .jsonPath("$.data.items[0].productId").isEqualTo(product1.id())
+                .jsonPath("$.data.items[0].productName").isEqualTo("테스트 상품 1")
+                .jsonPath("$.data.items[0].score").exists()
+                .jsonPath("$.data.items[0].content").exists()
+                .jsonPath("$.data.items[0].createdAt").exists();
+        }
+
+        @Test
+        @DisplayName("리뷰 점수가 올바르게 반환되어야 한다")
+        void getAllReviewsByProductId_ReviewScoresAreCorrect() {
+            // when
+            webTestClient.get()
+                .uri(uriBuilder -> uriBuilder
+                    .path("/api/products/{productId}/reviews")
+                    .queryParam(
+                        "size",
+                        10
+                    ) // 모든 리뷰를 한 번에 조회
+                    .build(product1.id()))
+                .exchange()
+                // then
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.data.items[?(@.id == " + review1.id() + ")].score").isEqualTo(5)
+                .jsonPath("$.data.items[?(@.id == " + review2.id() + ")].score").isEqualTo(4)
+                .jsonPath("$.data.items[?(@.id == " + review3.id() + ")].score").isEqualTo(3);
+        }
+
+        @Test
+        @DisplayName("리뷰 내용이 올바르게 반환되어야 한다")
+        void getAllReviewsByProductId_ReviewContentsAreCorrect() {
+            // when
+            webTestClient.get()
+                .uri(
+                    "/api/products/{productId}/reviews",
+                    product1.id()
+                )
+                .exchange()
+                // then
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.data.items[?(@.id == " + review3.id() + ")].content")
+                .isEqualTo("가격대비 만족스럽습니다.")
+                .jsonPath("$.data.items[?(@.id == " + review2.id() + ")].content")
+                .isEqualTo("배송이 빠르고 포장도 깔끔했습니다.")
+                .jsonPath("$.data.items[?(@.id == " + review1.id() + ")].content")
+                .isEqualTo("정말 좋은 상품입니다. 강아지가 너무 좋아해요!");
+        }
     }
 }

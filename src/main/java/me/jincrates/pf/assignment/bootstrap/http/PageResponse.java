@@ -7,24 +7,25 @@ import lombok.Builder;
 @Builder(access = AccessLevel.PRIVATE)
 public record PageResponse<T>(
     int page,
-    boolean hasNext,
-    List<T> contents
+    int itemCount,
+    List<T> items
 ) {
 
     public static <T> PageResponse<T> of(
-        int page,
-        int size,
-        List<T> contents
+        final int page,
+        final int size,
+        final List<T> contents
     ) {
+        final int minSize = Math.min(
+            contents.size(),
+            size
+        );
         return PageResponse.<T>builder()
             .page(page)
-            .hasNext(contents.size() > size)
-            .contents(contents.subList(
+            .itemCount(minSize)
+            .items(contents.subList(
                 0,
-                Math.min(
-                    contents.size(),
-                    size
-                )
+                minSize
             ))
             .build();
     }

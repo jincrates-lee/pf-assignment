@@ -2,8 +2,10 @@ package me.jincrates.pf.assignment.application.service;
 
 import static me.jincrates.pf.assignment.shared.util.ValueUtil.defaultIfNull;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import me.jincrates.pf.assignment.application.ReviewUseCase;
 import me.jincrates.pf.assignment.application.dto.CreateReviewRequest;
@@ -112,14 +114,11 @@ class ReviewService implements ReviewUseCase {
     @Override
     @Transactional(readOnly = true)
     public List<ReviewResponse> getAllReviewsByProductId(final GetAllReviewsQuery query) {
-        Product product = productRepository.findById(query.productId())
-            .orElseThrow(() -> new BusinessException(
-                "상품을 찾을 수 없습니다.",
-                Map.of(
-                    "productId",
-                    query.productId()
-                )
-            ));
+        Optional<Product> productOpt = productRepository.findById(query.productId());
+        if (productOpt.isEmpty()) {
+            return Collections.emptyList();
+        }
+        Product product = productOpt.get();
 
         List<Review> reviews = reviewRepository.findAllByProductId(
             query.productId(),
