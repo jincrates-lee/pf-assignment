@@ -189,7 +189,7 @@ src/main/java
 POST http://localhost:8090/api/products
 Content-Type: application/json
 ```
-#### CreateProductRequest
+#### Request
 ```json
 {
   "name": "촉촉트릿 북어 80g",
@@ -199,13 +199,13 @@ Content-Type: application/json
   "categoryIds": [1, 2, 3]
 }
 ```
-- `name`: 상품 이름은 필수입니다.
-- `sellingPrice`: 상품 판매가는 0원보다 커야합니다.
-- `discountPrice`: 상품 할인가는 0원 이상이여야 합니다.
-- `brand`: 상품 브랜드는 필수입니다.
-- `categoryIds`: 상품 카테고리 목록은 필수입니다.
+- `name`: 상품 이름은 필수입니다. (공백 불가)
+- `sellingPrice`: 상품 판매가는 필수이며 0원보다 커야합니다.
+- `discountPrice`: 상품 할인가는 필수이며 0원 이상이여야 합니다.
+- `brand`: 상품 브랜드는 필수입니다. (공백 불가)
+- `categoryIds`: 상품 카테고리 목록은 필수입니다. (빈 배열 불가)
 
-#### CreateProductResponse
+#### Response
 ```json
 {
   "success": true,
@@ -215,7 +215,71 @@ Content-Type: application/json
   }
 }
 ```
+
+### 상품 수정 API
+```http request
+PATCH http://localhost:8090/api/products/{productId}
+Content-Type: application/json
+```
+
+#### Request
+```json
+{
+  "name": "촉촉트릿 북어 80g (수정)",
+  "sellingPrice": 16000,
+  "discountPrice": 2500,
+  "brand": "촉촉트릿",
+  "categoryIds": [1, 3]
+}
+```
+- 상품 등록과 동일한 검증 규칙 적용
+- productId: Path Variable로 전달되는 상품 ID
+
+#### Response
+```json
+{
+  "success": true,
+  "message": null,
+  "data": {
+    "productId": 3
+  }
+}
+```
+### 상품 삭제 API
+```http request
+DELETE http://localhost:8090/api/products/{productId}
+```
+
+#### Request
+- Path Variable: (Long) `productId`
+
+
+#### Response
+```json
+{
+  "success": true,
+  "message": null,
+  "data": null
+}
+```
 <br/>
+
+### XX API
+GET http://localhost:8090/api/
+Content-Type: application/json
+
+#### Request
+```json
+{
+}
+```
+
+#### Response
+```json
+{
+}
+```
+
 
 ## 과제를 하면서
 
