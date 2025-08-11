@@ -1,4 +1,4 @@
-package me.jincrates.pf.assignment.bootstrap.listener;
+package me.jincrates.pf.assignment.bootstrap.handler;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +13,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class ProductDeletedEventReviewListener {
+public class ProductDeletedEventReviewHandler {
 
     private final ReviewUseCase useCase;
 

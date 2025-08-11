@@ -2,7 +2,6 @@ package me.jincrates.pf.assignment.bootstrap.http;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.math.BigDecimal;
 import java.util.List;
 import me.jincrates.pf.assignment.IntegrationTestSupport;
 import me.jincrates.pf.assignment.application.repository.CategoryRepository;
@@ -43,8 +42,8 @@ class ReviewControllerIntegrationTest extends IntegrationTestSupport {
             .build());
         product = productRepository.save(Product.builder()
             .name("기존 상품")
-            .sellingPrice(BigDecimal.valueOf(30000))
-            .discountPrice(BigDecimal.valueOf(25000))
+            .sellingPrice(30000L)
+            .discountPrice(25000L)
             .brand("기존 브랜드")
             .categories(List.of(category))
             .build());
@@ -142,7 +141,7 @@ class ReviewControllerIntegrationTest extends IntegrationTestSupport {
         @DisplayName("리뷰 내용이 500자를 초과할 때 생성에 실패한다")
         void createReview_WithLongContent_BadRequest() {
             // given
-            String longContent = "a" .repeat(501);
+            String longContent = "a".repeat(501);
             String requestBody = String.format(
                 """
                     {
@@ -336,7 +335,7 @@ class ReviewControllerIntegrationTest extends IntegrationTestSupport {
         @DisplayName("리뷰 내용이 500자를 초과할 때 수정에 실패한다")
         void updateReview_WithLongContent_BadRequest() {
             // given
-            String longContent = "a" .repeat(501);
+            String longContent = "a".repeat(501);
             String requestBody = String.format(
                 """
                     {
