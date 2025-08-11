@@ -12,11 +12,11 @@ import me.jincrates.pf.assignment.domain.exception.BusinessException;
 import me.jincrates.pf.assignment.domain.model.Review;
 import me.jincrates.pf.assignment.domain.vo.PageSize;
 import me.jincrates.pf.assignment.domain.vo.ProductAverageScore;
+import me.jincrates.pf.assignment.domain.vo.ReviewSortType;
 import me.jincrates.pf.assignment.infrastructure.persistence.jpa.entity.ReviewJpaEntity;
 import me.jincrates.pf.assignment.infrastructure.persistence.jpa.mapper.ReviewJpaMapper;
 import me.jincrates.pf.assignment.infrastructure.persistence.jpa.repository.ReviewJpaRepository;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -64,14 +64,14 @@ class ReviewRepositoryAdapter implements ReviewRepository {
     @Override
     public List<Review> findAllByProductId(
         final Long productId,
-        final String sort,
+        final ReviewSortType sort,
         final PageSize pageSize
     ) {
 
         PageRequest pageable = PageRequest.of(
             pageSize.page(),
             pageSize.size() + 1,
-            sortBy(sort)
+            sort.toSort()
         );
 
         return repository.findAllByProductId(
@@ -106,11 +106,5 @@ class ReviewRepositoryAdapter implements ReviewRepository {
                         .longValue()
                 )
             );
-    }
-
-    private Sort sortBy(final String sortParam) {
-        return switch (sortParam) {
-            default -> Sort.by("createdAt").descending(); // 최근 등록순
-        };
     }
 }

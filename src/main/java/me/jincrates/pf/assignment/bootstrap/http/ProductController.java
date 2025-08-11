@@ -14,6 +14,8 @@ import me.jincrates.pf.assignment.application.dto.ReviewResponse;
 import me.jincrates.pf.assignment.application.dto.UpdateProductRequest;
 import me.jincrates.pf.assignment.application.dto.UpdateProductResponse;
 import me.jincrates.pf.assignment.domain.vo.PageSize;
+import me.jincrates.pf.assignment.domain.vo.ProductSortType;
+import me.jincrates.pf.assignment.domain.vo.ReviewSortType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -66,7 +68,7 @@ class ProductController extends BaseController {
         List<ProductSummaryResponse> response = productUseCase.getAllProductsByCategoryId(
             GetAllProductsQuery.builder()
                 .categoryId(categoryId)
-                .sort(sort)
+                .sort(ProductSortType.fromValue(sort))
                 .pageSize(new PageSize(
                     page,
                     size
@@ -90,7 +92,7 @@ class ProductController extends BaseController {
         List<ReviewResponse> response = reviewUseCase.getAllReviewsByProductId(
             GetAllReviewsQuery.builder()
                 .productId(productId)
-                .sort(sort)
+                .sort(ReviewSortType.fromValue(sort))
                 .pageSize(new PageSize(
                     page,
                     size

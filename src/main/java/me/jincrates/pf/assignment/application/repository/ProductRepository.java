@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import me.jincrates.pf.assignment.domain.model.Product;
 import me.jincrates.pf.assignment.domain.vo.PageSize;
+import me.jincrates.pf.assignment.domain.vo.ProductSortType;
 
 public interface ProductRepository {
 
@@ -19,7 +20,7 @@ public interface ProductRepository {
 
     List<Product> findAllByCategoryId(
         Long categoryId,
-        String sort,
+        ProductSortType sort,
         PageSize pageSize
     );
 }
