@@ -10,7 +10,13 @@ public enum ReviewSortType {
         "created_desc",
         "createdAt",
         Direction.DESC
-    );
+    ),
+    CREATED_ASC(
+        "created_asc",
+        "createdAt",
+        Direction.ASC
+    ),
+    ;
 
     @Getter
     private final String value;

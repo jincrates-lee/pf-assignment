@@ -386,7 +386,11 @@ class ProductControllerIntegrationTest extends IntegrationTestSupport {
                     savedProduct.id()
                 )
                 .exchange()
-                .expectStatus().isNoContent();
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.success").isEqualTo(true)
+                .jsonPath("$.message").isEqualTo(null)
+                .jsonPath("$.data").isEmpty();
 
             // 실제로 삭제되었는지 확인
             assertThat(productRepository.findById(savedProduct.id())).isEmpty();

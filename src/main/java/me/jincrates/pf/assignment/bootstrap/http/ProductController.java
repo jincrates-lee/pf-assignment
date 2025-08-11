@@ -13,6 +13,7 @@ import me.jincrates.pf.assignment.application.dto.ProductSummaryResponse;
 import me.jincrates.pf.assignment.application.dto.ReviewResponse;
 import me.jincrates.pf.assignment.application.dto.UpdateProductRequest;
 import me.jincrates.pf.assignment.application.dto.UpdateProductResponse;
+import me.jincrates.pf.assignment.bootstrap.http.docs.ProductControllerDocs;
 import me.jincrates.pf.assignment.domain.vo.PageSize;
 import me.jincrates.pf.assignment.domain.vo.ProductSortType;
 import me.jincrates.pf.assignment.domain.vo.ReviewSortType;
@@ -30,11 +31,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/products")
-class ProductController extends BaseController {
+class ProductController extends BaseController implements ProductControllerDocs {
 
     private final ProductUseCase productUseCase;
     private final ReviewUseCase reviewUseCase;
 
+    @Override
     @PostMapping
     public ResponseEntity<BaseResponse<CreateProductResponse>> createProduct(
         @Valid @RequestBody CreateProductRequest request
@@ -42,6 +44,7 @@ class ProductController extends BaseController {
         return created(productUseCase.create(request));
     }
 
+    @Override
     @PatchMapping("/{productId}")
     public ResponseEntity<BaseResponse<UpdateProductResponse>> updateProduct(
         @PathVariable Long productId,
@@ -50,14 +53,16 @@ class ProductController extends BaseController {
         return ok(productUseCase.update(request.withId(productId)));
     }
 
+    @Override
     @DeleteMapping("/{productId}")
     public ResponseEntity<BaseResponse<Void>> deleteProduct(
         @PathVariable Long productId
     ) {
         productUseCase.delete(productId);
-        return noContent();
+        return ok();
     }
 
+    @Override
     @GetMapping
     public ResponseEntity<BaseResponse<PageResponse<ProductSummaryResponse>>> getAllProductsByCategoryId(
         @RequestParam Long categoryId,
@@ -82,6 +87,7 @@ class ProductController extends BaseController {
         ));
     }
 
+    @Override
     @GetMapping("/{productId}/reviews")
     public ResponseEntity<BaseResponse<PageResponse<ReviewResponse>>> getAllReviewsByProductId(
         @PathVariable Long productId,

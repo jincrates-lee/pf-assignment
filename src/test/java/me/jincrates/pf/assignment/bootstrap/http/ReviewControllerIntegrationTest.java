@@ -420,7 +420,11 @@ class ReviewControllerIntegrationTest extends IntegrationTestSupport {
                     savedReview.id()
                 )
                 .exchange()
-                .expectStatus().isNoContent();
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.success").isEqualTo(true)
+                .jsonPath("$.message").isEqualTo(null)
+                .jsonPath("$.data").isEmpty();
 
             // 실제로 삭제되었는지 확인
             assertThat(reviewRepository.findById(savedReview.id())).isEmpty();
