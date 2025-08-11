@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import me.jincrates.pf.assignment.domain.model.Review;
+import me.jincrates.pf.assignment.domain.vo.PageSize;
 
 public interface ReviewRepository {
 
@@ -18,6 +19,12 @@ public interface ReviewRepository {
     void deleteById(Long reviewId);
 
     void deleteAllByProductId(Long productId);
+
+    List<Review> findAllByProductId(
+        Long productId,
+        String sort,
+        PageSize pageSize
+    );
 
     List<Review> findAllByProductIdIn(List<Long> productIds);
 

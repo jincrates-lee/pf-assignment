@@ -4,10 +4,13 @@ import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import me.jincrates.pf.assignment.application.ProductUseCase;
+import me.jincrates.pf.assignment.application.ReviewUseCase;
 import me.jincrates.pf.assignment.application.dto.CreateProductRequest;
 import me.jincrates.pf.assignment.application.dto.CreateProductResponse;
 import me.jincrates.pf.assignment.application.dto.GetAllProductsQuery;
+import me.jincrates.pf.assignment.application.dto.GetAllReviewsQuery;
 import me.jincrates.pf.assignment.application.dto.ProductSummaryResponse;
+import me.jincrates.pf.assignment.application.dto.ReviewResponse;
 import me.jincrates.pf.assignment.application.dto.UpdateProductRequest;
 import me.jincrates.pf.assignment.application.dto.UpdateProductResponse;
 import me.jincrates.pf.assignment.domain.vo.PageSize;
@@ -27,13 +30,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/products")
 class ProductController extends BaseController {
 
-    private final ProductUseCase useCase;
+    private final ProductUseCase productUseCase;
+    private final ReviewUseCase reviewUseCase;
 
     @PostMapping
     public ResponseEntity<BaseResponse<CreateProductResponse>> createProduct(
         @Valid @RequestBody CreateProductRequest request
     ) {
-        return created(useCase.create(request));
+        return created(productUseCase.create(request));
     }
 
     @PatchMapping("/{productId}")
@@ -41,14 +45,14 @@ class ProductController extends BaseController {
         @PathVariable Long productId,
         @Valid @RequestBody UpdateProductRequest request
     ) {
-        return ok(useCase.update(request.withId(productId)));
+        return ok(productUseCase.update(request.withId(productId)));
     }
 
     @DeleteMapping("/{productId}")
     public ResponseEntity<BaseResponse<Void>> deleteProduct(
         @PathVariable Long productId
     ) {
-        useCase.delete(productId);
+        productUseCase.delete(productId);
         return noContent();
     }
 
@@ -59,9 +63,33 @@ class ProductController extends BaseController {
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "5") int size
     ) {
-        List<ProductSummaryResponse> response = useCase.getAllProductsByCategoryId(
+        List<ProductSummaryResponse> response = productUseCase.getAllProductsByCategoryId(
             GetAllProductsQuery.builder()
                 .categoryId(categoryId)
+                .sort(sort)
+                .pageSize(new PageSize(
+                    page,
+                    size
+                ))
+                .build()
+        );
+        return ok(PageResponse.of(
+            page,
+            size,
+            response
+        ));
+    }
+
+    @GetMapping("/{productId}/reviews")
+    public ResponseEntity<BaseResponse<PageResponse<ReviewResponse>>> getAllReviewsByProductId(
+        @PathVariable Long productId,
+        @RequestParam(defaultValue = "created_desc") String sort,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "5") int size
+    ) {
+        List<ReviewResponse> response = reviewUseCase.getAllReviewsByProductId(
+            GetAllReviewsQuery.builder()
+                .productId(productId)
                 .sort(sort)
                 .pageSize(new PageSize(
                     page,

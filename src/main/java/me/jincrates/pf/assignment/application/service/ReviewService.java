@@ -2,16 +2,20 @@ package me.jincrates.pf.assignment.application.service;
 
 import static me.jincrates.pf.assignment.shared.util.ValueUtil.defaultIfNull;
 
+import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import me.jincrates.pf.assignment.application.ReviewUseCase;
 import me.jincrates.pf.assignment.application.dto.CreateReviewRequest;
 import me.jincrates.pf.assignment.application.dto.CreateReviewResponse;
+import me.jincrates.pf.assignment.application.dto.GetAllReviewsQuery;
+import me.jincrates.pf.assignment.application.dto.ReviewResponse;
 import me.jincrates.pf.assignment.application.dto.UpdateReviewRequest;
 import me.jincrates.pf.assignment.application.dto.UpdateReviewResponse;
 import me.jincrates.pf.assignment.application.repository.ProductRepository;
 import me.jincrates.pf.assignment.application.repository.ReviewRepository;
 import me.jincrates.pf.assignment.domain.exception.BusinessException;
+import me.jincrates.pf.assignment.domain.model.Product;
 import me.jincrates.pf.assignment.domain.model.Review;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +30,15 @@ class ReviewService implements ReviewUseCase {
     @Override
     @Transactional
     public CreateReviewResponse create(final CreateReviewRequest request) {
-        validateProductExists(request.productId());
+        if (!productRepository.existsById(request.productId())) {
+            throw new BusinessException(
+                "상품을 찾을 수 없습니다.",
+                Map.of(
+                    "productId",
+                    request.productId()
+                )
+            );
+        }
 
         Review review = Review.builder()
             .productId(request.productId())
@@ -97,15 +109,33 @@ class ReviewService implements ReviewUseCase {
         reviewRepository.deleteAllByProductId(productId);
     }
 
-    private void validateProductExists(final Long productId) {
-        if (!productRepository.existsById(productId)) {
-            throw new BusinessException(
+    @Override
+    @Transactional(readOnly = true)
+    public List<ReviewResponse> getAllReviewsByProductId(final GetAllReviewsQuery query) {
+        Product product = productRepository.findById(query.productId())
+            .orElseThrow(() -> new BusinessException(
                 "상품을 찾을 수 없습니다.",
                 Map.of(
                     "productId",
-                    productId
+                    query.productId()
                 )
-            );
-        }
+            ));
+
+        List<Review> reviews = reviewRepository.findAllByProductId(
+            query.productId(),
+            query.sort(),
+            query.pageSize()
+        );
+
+        return reviews.stream()
+            .map(it -> ReviewResponse.builder()
+                .id(it.id())
+                .productId(it.productId())
+                .productName(product.name())
+                .content(it.content())
+                .score(it.score())
+                .createdAt(it.createdAt())
+                .build())
+            .toList();
     }
 }
