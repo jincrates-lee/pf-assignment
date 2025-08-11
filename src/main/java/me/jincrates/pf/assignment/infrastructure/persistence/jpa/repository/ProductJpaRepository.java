@@ -14,8 +14,23 @@ public interface ProductJpaRepository extends JpaRepository<ProductJpaEntity, Lo
         FROM ProductJpaEntity p
         JOIN p.productCategories pc
         WHERE pc.category.id = :categoryId
+        ORDER BY p.sellingPrice ASC
         """)
-    List<ProductJpaEntity> findAllByCategoryId(
+    List<ProductJpaEntity> findAllByCategoryIdOrderBySellingPriceAsc(
+        @Param("categoryId") Long categoryId,
+        Pageable pageable
+    );
+
+    @Query("""
+        SELECT p
+        FROM ProductJpaEntity p
+        JOIN p.productCategories pc
+        LEFT JOIN ReviewJpaEntity r on r.productId = p.id
+        WHERE pc.category.id = :categoryId
+        GROUP BY p
+        ORDER BY COUNT(r) DESC
+        """)
+    List<ProductJpaEntity> findAllByCategoryIdOrderByReviewCountDesc(
         @Param("categoryId") Long categoryId,
         Pageable pageable
     );

@@ -19,7 +19,7 @@ public enum ProductSortType {
      */
     REVIEW_COUNT_DESC(
         "review_desc",
-        "reviewCount",
+        "COUNT(r)",
         Direction.DESC
     ),
     ;

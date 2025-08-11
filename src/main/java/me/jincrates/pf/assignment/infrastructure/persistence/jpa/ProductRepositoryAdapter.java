@@ -59,14 +59,21 @@ class ProductRepositoryAdapter implements ProductRepository {
     ) {
         PageRequest pageRequest = PageRequest.of(
             pageSize.page(),
-            pageSize.size() + 1,
-            sort.toSort()
+            pageSize.size() + 1
         );
 
-        return repository.findAllByCategoryId(
+        List<ProductJpaEntity> products = switch (sort) {
+            case SELLING_PRICE_ASC -> repository.findAllByCategoryIdOrderBySellingPriceAsc(
                 categoryId,
                 pageRequest
-            ).stream()
+            );
+            case REVIEW_COUNT_DESC -> repository.findAllByCategoryIdOrderByReviewCountDesc(
+                categoryId,
+                pageRequest
+            );
+        };
+
+        return products.stream()
             .map(ProductJpaMapper::toDomain)
             .toList();
     }
