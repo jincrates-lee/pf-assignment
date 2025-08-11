@@ -34,7 +34,7 @@ cd pf-assignment
 
 ### 3. API 문서 확인
 
-애플리케이션 실행 후 다음 URL에서 Swagger UI를 통해 API를 확인하고 테스트할 수 있습니다:
+애플리케이션 실행 후 다음 URL에서 Swagger UI를 통해 API를 확인하고 테스트할 수 있습니다.
 
 - **Swagger UI**: [http://localhost:8090/swagger-ui/index.html](http://localhost:8090/swagger-ui/index.html)
 - **API Docs**: [http://localhost:8090/v3/api-docs](http://localhost:8090/v3/api-docs)
@@ -184,8 +184,37 @@ src/main/java
 <br/>
 
 ## API Reference
-ㅁㄴㅇㄹ
+### 상품 등록 API
+```http request
+POST http://localhost:8090/api/products
+Content-Type: application/json
+```
+#### CreateProductRequest
+```json
+{
+  "name": "촉촉트릿 북어 80g",
+  "sellingPrice": 15000,
+  "discountPrice": 2100,
+  "brand": "촉촉트릿",
+  "categoryIds": [1, 2, 3]
+}
+```
+- `name`: 상품 이름은 필수입니다.
+- `sellingPrice`: 상품 판매가는 0원보다 커야합니다.
+- `discountPrice`: 상품 할인가는 0원 이상이여야 합니다.
+- `brand`: 상품 브랜드는 필수입니다.
+- `categoryIds`: 상품 카테고리 목록은 필수입니다.
 
+#### CreateProductResponse
+```json
+{
+  "success": true,
+  "message": null,
+  "data": {
+    "productId": 1
+  }
+}
+```
 <br/>
 
 ## 과제를 하면서
