@@ -15,6 +15,8 @@
 ![Generic badge](https://img.shields.io/badge/1.18.38-Lombok-BC2031.svg)
 ![Generic badge](https://img.shields.io/badge/2.8.9-Swagger-85EA2D.svg)
 
+<br/>
+
 ## 실행하는 방법
 
 ### 1. 프로젝트 클론
@@ -43,6 +45,8 @@ cd pf-assignment
 - **JDBC URL**: `jdbc:h2:mem:testdb`
 - **Username**: `sa`
 - **Password**: (없음)
+
+<br/>
 
 ## ERD 설계
 
@@ -87,13 +91,9 @@ erDiagram
     products ||--o{ reviews : "has"
 ```
 
+<br/>
+
 ## 아키텍처 설계
-- **Bootstrap Layer**: HTTP, 이벤트, 스케줄러 등 외부 트리거를 받아 애플리케이션을 연결하는 진입점(http, event listener)
-- **Application Layer**: 비즈니스 유즈케이스를 통해 도메인 객체들을 협력시키는 계층(usecase, port)
-  - usecase: 특정 비즈니스 시나리오, 트랜잭션 처리
-  - port: 외부와의 계약 인터페이스
-- **Domain Layer**: 핵심 비즈니스 로직과 규칙이 담긴 계층
-- **Infrastructure Layer**: 기술적 구현 세부사항을 담당하는 계층(port의 실제 구현체)
 ```mermaid
 graph TD
     subgraph "Bootstrap Layer"
@@ -138,6 +138,14 @@ graph TD
     class MODEL,VO domain
     class JPA infrastructure
 ```
+- **Bootstrap Layer**: HTTP, 이벤트, 스케줄러 등 외부 트리거를 받아 애플리케이션을 연결하는 진입점(http, event listener)
+- **Application Layer**: 비즈니스 유즈케이스를 통해 도메인 객체들을 협력시키는 계층(usecase, port)
+  - usecase: 특정 비즈니스 시나리오, 트랜잭션 처리
+  - port: 외부와의 계약 인터페이스
+- **Domain Layer**: 핵심 비즈니스 로직과 규칙이 담긴 계층
+- **Infrastructure Layer**: 기술적 구현 세부사항을 담당하는 계층(port의 실제 구현체)
+
+<br/>
 
 ## 디렉토리 구조
 
@@ -173,10 +181,12 @@ src/main/java
                     ├── config                      - 프로젝트 설정 관련
                     └── util                        - 유틸클래스
 ```
+<br/>
 
 ## API Reference
 ㅁㄴㅇㄹ
 
+<br/>
 
 ## 과제를 하면서
 
