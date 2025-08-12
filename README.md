@@ -94,6 +94,7 @@ erDiagram
 <br/>
 
 ## 아키텍처 설계
+
 ```mermaid
 graph TD
     subgraph "Bootstrap Layer"
@@ -138,10 +139,11 @@ graph TD
     class MODEL,VO domain
     class JPA infrastructure
 ```
+
 - **Bootstrap Layer**: HTTP, 이벤트, 스케줄러 등 외부 트리거를 받아 애플리케이션을 연결하는 진입점(http, event listener)
 - **Application Layer**: 비즈니스 유즈케이스를 통해 도메인 객체들을 협력시키는 계층(usecase, port)
-  - usecase: 특정 비즈니스 시나리오, 트랜잭션 처리
-  - port: 외부와의 계약 인터페이스
+    - usecase: 특정 비즈니스 시나리오, 트랜잭션 처리
+    - port: 외부와의 계약 인터페이스
 - **Domain Layer**: 핵심 비즈니스 로직과 규칙이 담긴 계층
 - **Infrastructure Layer**: 기술적 구현 세부사항을 담당하는 계층(port의 실제 구현체)
 
@@ -181,108 +183,23 @@ src/main/java
                     ├── config                      - 프로젝트 설정 관련
                     └── util                        - 유틸클래스
 ```
+
 <br/>
 
 ## API Reference
-### 상품 등록 API
-```http request
-POST http://localhost:8090/api/products
-Content-Type: application/json
-```
-#### Request
-```json
-{
-  "name": "촉촉트릿 북어 80g",
-  "sellingPrice": 15000,
-  "discountPrice": 2100,
-  "brand": "촉촉트릿",
-  "categoryIds": [1, 2, 3]
-}
-```
-- `name`: 상품 이름은 필수입니다. (공백 불가)
-- `sellingPrice`: 상품 판매가는 필수이며 0원보다 커야합니다.
-- `discountPrice`: 상품 할인가는 필수이며 0원 이상이여야 합니다.
-- `brand`: 상품 브랜드는 필수입니다. (공백 불가)
-- `categoryIds`: 상품 카테고리 목록은 필수입니다. (빈 배열 불가)
-
-#### Response
-```json
-{
-  "success": true,
-  "message": null,
-  "data": {
-    "productId": 1
-  }
-}
-```
-
-### 상품 수정 API
-```http request
-PATCH http://localhost:8090/api/products/{productId}
-Content-Type: application/json
-```
-
-#### Request
-```json
-{
-  "name": "촉촉트릿 북어 80g (수정)",
-  "sellingPrice": 16000,
-  "discountPrice": 2500,
-  "brand": "촉촉트릿",
-  "categoryIds": [1, 3]
-}
-```
-- 상품 등록과 동일한 검증 규칙 적용
-- productId: Path Variable로 전달되는 상품 ID
-
-#### Response
-```json
-{
-  "success": true,
-  "message": null,
-  "data": {
-    "productId": 3
-  }
-}
-```
-### 상품 삭제 API
-```http request
-DELETE http://localhost:8090/api/products/{productId}
-```
-
-#### Request
-- Path Variable: (Long) `productId`
+Swagger 확인이 어렵다면, [API 문서](https://github.com/jincrates-lee/pf-assignment/blob/main/docs/API_REFERENCE.md)를 참조하시길 바랍니다.
 
 
-#### Response
-```json
-{
-  "success": true,
-  "message": null,
-  "data": null
-}
-```
-<br/>
+## 과제에 대한 회고
 
-### XX API
-GET http://localhost:8090/api/
-Content-Type: application/json
+### 목표 달성도
+ㅁㄴㅇㄹ
 
-#### Request
-```json
-{
-}
-```
+### 문제 해결 과정
+ㅁㄴㅇㄹ
 
-#### Response
-```json
-{
-}
-```
-
-
-## 과제를 하면서
-
-### 신경쓴 부분
+### 새롭게 도전한 부분
+ㅁㄴㅇㄹ
 
 ### 보완이 필요한 점
+ㅁㄴㅇㄹ
