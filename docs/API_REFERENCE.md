@@ -2,6 +2,8 @@
 - **Swagger UI**: [http://localhost:8090/swagger-ui/index.html](http://localhost:8090/swagger-ui/index.html)
 - **API Docs**: [http://localhost:8090/v3/api-docs](http://localhost:8090/v3/api-docs)
 
+<br/>
+
 ## API 목록
 
 | **Method** | **URI** | **Description** |
@@ -15,28 +17,30 @@
 | PATCH | `/api/reviews/{reviewId}` | 리뷰 수정 |
 | DELETE | `/api/reviews/{reviewId}` | 리뷰 삭제 |
 
+
 ### 공통 응답 구조
 모든 API는 다음과 같은 공통 응답 형식을 사용합니다.
-``` json
+```json
 {
-  "success": boolean,
-  "message": string | null,
-  "data": object | null
+  "success": true,
+  "message": null,
+  "data": null
 }
 ```
 ### 페이징 응답 형식
 목록 조회 API는 다음과 같은 페이징 응답 형식을 사용합니다:
-``` json
+```json
 {
   "success": true,
   "message": null,
   "data": {
-    "page": number,
-    "itemCount": number,
-    "items": array
+    "page": 0,
+    "itemCount": 5,
+    "items": []
   }
 }
 ```
+
 <br/>
 
 ## 상품 API
@@ -154,8 +158,8 @@ GET http://localhost:8090/api/products?categoryId=1&sort=price_asc&page=0&size=5
   "message": null,
   "data": {
     "page": 0,
-    "size": 5,
-    "content": [
+    "itemCount": 5,
+    "items": [
       {
         "id": 1,
         "name": "촉촉트릿 북어 80g",
