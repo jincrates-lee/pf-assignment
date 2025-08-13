@@ -1,6 +1,7 @@
 # 펫프렌즈 백엔드 채용 과제
+지원자: 이진규(jg.lee@pet-friends.co.kr)
 
-자바, 스프링부트, JPA를 사용한 상품/리뷰 서비스입니다.
+자바, 스프링부트, JPA를 사용한 상품/리뷰 서비스입니다. [과제](https://github.com/jincrates-lee/pf-assignment/blob/feature/refactoring/docs/ASSIGNMENT.md)
 
 
 <br/>
@@ -245,7 +246,7 @@ Swagger 확인이 어렵다면, [API 문서](https://github.com/jincrates-lee/pf
 
 ## 과제에 대한 회고
 
-### 목표 달성도
+### 목표 달성 체크리스트
 #### 필수 요구사항
 - [x] JAVA 17, Spring Boot 3, Gradle, JPA 
 - [x] DB 는 H2 를 사용해주세요.
@@ -280,7 +281,6 @@ Swagger 확인이 어렵다면, [API 문서](https://github.com/jincrates-lee/pf
 ### 문제 해결 과정
 
 #### 1. 이벤트 기반 아키텍처 도입을 통한 시스템 결합도 완화
-
 상품 삭제 시 연관된 리뷰 정보 삭제를 위해 이벤트 기반 비동기 처리 아키텍처를 도입했습니다. 상품 삭제 이벤트를 발행하여 리뷰 이벤트 리스너에서 처리함으로써 서비스 간 결합도를 낮추고 확장성을 높였습니다. 이를 통해 향후 MSA 환경에서도 쉽게 분리할 수 있는 구조를 구축했습니다.
 
 #### 2. 동시성 제어를 위한 불변 객체 설계 및 데이터 일관성 보장
@@ -297,9 +297,15 @@ UseCase 중심의 비즈니스 로직 단위 테스트와 엔드투엔드 통합
 ### 새롭게 도전한 부분
 #### 1. CI 파이프라인에서의 품질 관리 자동화
 작업 초기에 테스트 커버리지를 주기적으로 확인하기 위해 jacoco-report를 추가하여 테스트 코드 커버리지 자동화를 구현하였습니다. 작성한 코드에 대한 테스트 커버리지는 80% 이상을 강제함으로써 지속적인 코드 품질 관리 체계를 구축하였습니다. 
- 
+ ![img.png](docs/assets/img.png)
+
 #### 2. AI 기반 코드 품질 관리 시스템 도입
 1인 개발의 한계를 극복하기 위해 Gemini Code Assist를 활용한 자동 코드 리뷰 시스템을 구축했습니다. PR 요약 자동화와 코드 리뷰 자동화를 통해 객관적인 코드 품질 검증이 가능했으며, 실제로 잠재적 버그를 사전에 발견하여 수정하는 성과를 달성했습니다. 이는 개발자 경험(DX) 향상과 동시에 코드 품질 보장이라는 두 마리 토끼를 잡은 혁신적인 접근이었습니다.
+- https://github.com/jincrates-lee/pf-assignment/pull/1
+- https://github.com/jincrates-lee/pf-assignment/pull/3
+- https://github.com/jincrates-lee/pf-assignment/pull/4
+- https://github.com/jincrates-lee/pf-assignment/pull/5
+- https://github.com/jincrates-lee/pf-assignment/pull/6
 
 <br/>
 
