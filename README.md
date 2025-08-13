@@ -1,7 +1,7 @@
-# 펫프렌즈 백엔드 채용 과제
+# 펫프렌즈 백엔드 채용 과제 
 지원자: 이진규(jg.lee@pet-friends.co.kr)
 
-자바, 스프링부트, JPA를 사용한 상품/리뷰 서비스입니다. [과제](https://github.com/jincrates-lee/pf-assignment/blob/feature/refactoring/docs/ASSIGNMENT.md)
+자바, 스프링부트, JPA를 사용한 상품/리뷰 서비스입니다. [과제 전문](https://github.com/jincrates-lee/pf-assignment/blob/feature/refactoring/docs/ASSIGNMENT.md)
 
 
 <br/>
@@ -239,6 +239,55 @@ src/main/java
 
 <br/>
 
+## Git Branch 전략
+- main, feature를 구분하여 main 브랜치는 항상 배포 가능한 상태를 유지하였습니다. 
+- 작업 브랜치는 `feature/` 접두사를 사용하여 기능별로 독립적인 브랜치를 생성하였습니다.
+
+```mermaid
+gitGraph
+    commit id: "Initial commit"
+    branch feature/category
+    checkout feature/category
+    commit id: "카테고리 생성 API"
+    checkout main
+    merge feature/category
+    
+    branch feature/product
+    checkout feature/product
+    commit id: "상품 등록/수정/삭제"
+    commit id: "상품 API 보완"
+    checkout main
+    merge feature/product
+    
+    branch feature/review
+    checkout feature/review
+    commit id: "리뷰 등록/수정/삭제"
+    commit id: "리뷰 API 보완"
+    checkout main
+    merge feature/review
+    
+    branch feature/query-api
+    checkout feature/query-api
+    commit id: "상품 목록 조회"
+    commit id: "리뷰 목록 조회"
+    commit id: "페이징 처리 수정"
+    checkout main
+    merge feature/query-api
+    
+    branch feature/refactoring
+    checkout feature/refactoring
+    commit id: "스웨거 문서화"
+    commit id: "테스트 보완"
+    commit id: "문서 작성"
+    checkout main
+    merge feature/refactoring
+    
+    commit id: "문서 보완"
+    commit id: "로그 수정"
+```
+
+<br/>
+
 ## API Reference
 Swagger 확인이 어렵다면, [API 문서](https://github.com/jincrates-lee/pf-assignment/blob/feature/refactoring/docs/API_REFERENCE.md)를 참고하시길 바랍니다.
 
@@ -248,35 +297,35 @@ Swagger 확인이 어렵다면, [API 문서](https://github.com/jincrates-lee/pf
 
 ### 목표 달성 체크리스트
 #### 필수 요구사항
-- [x] JAVA 17, Spring Boot 3, Gradle, JPA 
-- [x] DB 는 H2 를 사용해주세요.
-- [x] API 명세는 Swagger 로 확인할 수 있어야 합니다. 
-- [x] Swagger 환경에서 API 테스트가 가능해야 합니다. 
-- [x] 단위 테스트코드를 작성해주세요.
-- [x] `README.md` 작성해주세요. (실행방법, swagger 주소 등)
-- [x] API가 정상적으로 작동해야합니다
-- [x] 유효성 검사가 적절하게 적용되어야합니다. -> spring-validation을 통한 request 검증, 도메인 객체 생성자 유효성 검증
+- [x] JAVA 17, Spring Boot 3, Gradle, JPA -> [build.gradle](https://github.com/jincrates-lee/pf-assignment/blob/main/build.gradle)
+- [x] DB 는 H2 를 사용해주세요. -> [build.gradle](https://github.com/jincrates-lee/pf-assignment/blob/main/build.gradle)
+- [x] API 명세는 Swagger 로 확인할 수 있어야 합니다. -> [Swagger API 명세 인터페이스](https://github.com/jincrates-lee/pf-assignment/tree/main/src/main/java/me/jincrates/pf/assignment/bootstrap/http/docs)
+- [x] Swagger 환경에서 API 테스트가 가능해야 합니다. -> [API 문서 확인](https://github.com/jincrates-lee/pf-assignment?tab=readme-ov-file#3-api-%EB%AC%B8%EC%84%9C-%ED%99%95%EC%9D%B8)
+- [x] 단위 테스트코드를 작성해주세요. -> [UseCase 중심 단위테스트 작성](https://github.com/jincrates-lee/pf-assignment/tree/main/src/test/java/me/jincrates/pf/assignment/application/service), [API 통합 테스트 추가](https://github.com/jincrates-lee/pf-assignment/tree/main/src/test/java/me/jincrates/pf/assignment/bootstrap/http)
+- [x] `README.md` 작성해주세요. (실행방법, swagger 주소 등) -> [READEME.md](https://github.com/jincrates-lee/pf-assignment/blob/main/README.md)
+- [x] API가 정상적으로 작동해야합니다 -> swagger에서 호출하여 확인 or [인텔리제이 http 실행 가능](https://github.com/jincrates-lee/pf-assignment/tree/main/docs/http)
+- [x] 유효성 검사가 적절하게 적용되어야합니다. -> [spring-validation을 통한 request 검증](https://github.com/jincrates-lee/pf-assignment/tree/main/src/main/java/me/jincrates/pf/assignment/application/dto), [도메인 객체 생성자 유효성 검증](https://github.com/jincrates-lee/pf-assignment/tree/main/src/main/java/me/jincrates/pf/assignment/domain/model)
 
 #### 구현 요구사항
 - [x] 상품 등록 시 `상품명` / `판매가격` / `할인가격` / `브랜드` / `카테고리정보`를 설정할 수 있다.
-- [x] 상품에는 여러개의 `카테고리정보`가 매핑될 수 있다. -
-- [x] 상품 삭제시 해당 상품에 연관된 리뷰 정보도 함께 삭제된다 
-- [x] 카테고리정보를 기준으로 상품목록을 조회한다.
-- [x] 정렬은 `낮은가격순` / `리뷰많은순` 두 가지 정렬기준을 제공한다.
-- [x] 상품 응답에는 `상품명` / `판매가격` / `할인가격` / `브랜드` / `할인율` / `리뷰평점` / `카테고리정보`가 있다
-  - [x] 할인율은 소수점 첫번째자리에서 반올림한다.
-  - [x] 할인율 = 할인가 / 판매가 * 100
-  - [x] 리뷰평점은 소수점 둘째자리에서 반올림한다.
+- [x] 상품에는 여러개의 `카테고리정보`가 매핑될 수 있다. - [ProductService.create()](https://github.com/jincrates-lee/pf-assignment/blob/1261f26ada3bf8a8c0f9da3b85e9905867d2c8f4/src/main/java/me/jincrates/pf/assignment/application/service/ProductService.java#L45)
+- [x] 상품 삭제시 해당 상품에 연관된 리뷰 정보도 함께 삭제된다 -> [ProductDeletedEventReviewHandler 이벤트로 비동기 처리](https://github.com/jincrates-lee/pf-assignment/blob/main/src/main/java/me/jincrates/pf/assignment/bootstrap/handler/ProductDeletedEventReviewHandler.java)
+- [x] 카테고리정보를 기준으로 상품목록을 조회한다. -> [카테고리별 상품 목록 조회 API](https://github.com/jincrates-lee/pf-assignment/blob/1261f26ada3bf8a8c0f9da3b85e9905867d2c8f4/src/main/java/me/jincrates/pf/assignment/bootstrap/http/docs/ProductControllerDocs.java#L58)
+- [x] 정렬은 `낮은가격순` / `리뷰많은순` 두 가지 정렬기준을 제공한다. -> 위와 동일
+- [x] 상품 응답에는 `상품명` / `판매가격` / `할인가격` / `브랜드` / `할인율` / `리뷰평점` / `카테고리정보`가 있다 -> 위와 동일
+  - [x] 할인율은 소수점 첫번째자리에서 반올림한다. -> [상품 도메인 객체에서 계산](https://github.com/jincrates-lee/pf-assignment/blob/1261f26ada3bf8a8c0f9da3b85e9905867d2c8f4/src/main/java/me/jincrates/pf/assignment/domain/model/Product.java#L43)
+  - [x] 할인율 = 할인가 / 판매가 * 100 -> 위와 동일
+  - [x] 리뷰평점은 소수점 둘째자리에서 반올림한다. -> [상품별 리뷰 평균 조회 Map 생성](https://github.com/jincrates-lee/pf-assignment/blob/1261f26ada3bf8a8c0f9da3b85e9905867d2c8f4/src/main/java/me/jincrates/pf/assignment/infrastructure/persistence/jpa/ReviewRepositoryAdapter.java#L93)
   - [x] 카테고리정보는 상품에 연결된 모든 카테고리정보를 응답해야한다.
-- [x] 리뷰는 `상품ID` / `내용`/ `리뷰점수`를 등록한다.
-- [x] 리뷰는 `내용`/ `리뷰점수`만 수정 가능하다.
-- [x] 리뷰점수는 1~5점까지 정할 수 있다.
-- [x] 상품ID를 기준으로 리뷰 목록을 조회한다.
-- [x] 리뷰는 기본 페이지당 5개씩 노출되어야 하고 노출 수는 변경될 수 있다.
-- [x] 정렬은 `최근 등록순`으로 조회한다.
-- [x] 리뷰 응답에는 `상품명` / `리뷰점수` / `내용`이 있다
+- [x] 리뷰는 `상품ID` / `내용`/ `리뷰점수`를 등록한다. -> [리뷰 등록 API](https://github.com/jincrates-lee/pf-assignment/blob/1261f26ada3bf8a8c0f9da3b85e9905867d2c8f4/src/main/java/me/jincrates/pf/assignment/bootstrap/http/docs/ReviewControllerDocs.java#L24)
+- [x] 리뷰는 `내용`/ `리뷰점수`만 수정 가능하다. -> [리뷰 수정 API](https://github.com/jincrates-lee/pf-assignment/blob/1261f26ada3bf8a8c0f9da3b85e9905867d2c8f4/src/main/java/me/jincrates/pf/assignment/bootstrap/http/docs/ReviewControllerDocs.java#L33)
+- [x] 리뷰점수는 1~5점까지 정할 수 있다. -> [request 검증](https://github.com/jincrates-lee/pf-assignment/blob/1261f26ada3bf8a8c0f9da3b85e9905867d2c8f4/src/main/java/me/jincrates/pf/assignment/application/dto/CreateReviewRequest.java#L20), [도메인에서 검증](https://github.com/jincrates-lee/pf-assignment/blob/1261f26ada3bf8a8c0f9da3b85e9905867d2c8f4/src/main/java/me/jincrates/pf/assignment/domain/model/Review.java#L30)
+- [x] 상품ID를 기준으로 리뷰 목록을 조회한다. [상품별 리뷰 목록 조회 API](https://github.com/jincrates-lee/pf-assignment/blob/1261f26ada3bf8a8c0f9da3b85e9905867d2c8f4/src/main/java/me/jincrates/pf/assignment/bootstrap/http/docs/ProductControllerDocs.java#L77)
+- [x] 리뷰는 기본 페이지당 5개씩 노출되어야 하고 노출 수는 변경될 수 있다. -> 위와 동일
+- [x] 정렬은 `최근 등록순`으로 조회한다. -> 위와 동일
+- [x] 리뷰 응답에는 `상품명` / `리뷰점수` / `내용`이 있다 -> [리뷰 응답 객체](https://github.com/jincrates-lee/pf-assignment/blob/main/src/main/java/me/jincrates/pf/assignment/application/dto/ReviewResponse.java)
+- [x] 동시성을 고려한 설계 및 구현해주세요. -> 밑에 설명
 - [ ] 대용량 트래픽과 마이크로서비스 환경을 고려하면 좋습니다.
-- [x] 동시성을 고려한 설계 및 구현해주세요.
 
 ### 문제 해결 과정
 
@@ -301,11 +350,11 @@ UseCase 중심의 비즈니스 로직 단위 테스트와 엔드투엔드 통합
 
 #### 2. AI 기반 코드 품질 관리 시스템 도입
 1인 개발의 한계를 극복하기 위해 Gemini Code Assist를 활용한 자동 코드 리뷰 시스템을 구축했습니다. PR 요약 자동화와 코드 리뷰 자동화를 통해 객관적인 코드 품질 검증이 가능했으며, 실제로 잠재적 버그를 사전에 발견하여 수정하는 성과를 달성했습니다. 이는 개발자 경험(DX) 향상과 동시에 코드 품질 보장이라는 두 마리 토끼를 잡은 혁신적인 접근이었습니다.
-- https://github.com/jincrates-lee/pf-assignment/pull/1
-- https://github.com/jincrates-lee/pf-assignment/pull/3
-- https://github.com/jincrates-lee/pf-assignment/pull/4
-- https://github.com/jincrates-lee/pf-assignment/pull/5
-- https://github.com/jincrates-lee/pf-assignment/pull/6
+- [feat: 카테고리 생성 API 개발](https://github.com/jincrates-lee/pf-assignment/pull/1)
+- [feat: 상품 등록/수정/삭제 API 개발](https://github.com/jincrates-lee/pf-assignment/pull/3)
+- [feat: 리뷰 등록/수정/삭제 API 개발](https://github.com/jincrates-lee/pf-assignment/pull/4)
+- [feat: 상품, 리뷰 목록 조회 API 추가](https://github.com/jincrates-lee/pf-assignment/pull/5)
+- [refactor: 스웨거 문서화, 테스트 보완](https://github.com/jincrates-lee/pf-assignment/pull/6)
 
 <br/>
 
