@@ -40,5 +40,6 @@ public class CategoryJpaEntity extends BaseTimeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
+    @Comment("상위 카테고리 ID")
     private CategoryJpaEntity parent; // 자기참조 관계(계층 구조)
 }

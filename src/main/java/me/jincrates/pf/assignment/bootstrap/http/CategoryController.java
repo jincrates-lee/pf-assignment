@@ -19,6 +19,7 @@ class CategoryController extends BaseController implements CategoryControllerDoc
 
     private final CategoryUseCase useCase;
 
+    @Override
     @PostMapping
     public ResponseEntity<BaseResponse<CreateCategoryResponse>> createCategory(
         @Valid @RequestBody CreateCategoryRequest request

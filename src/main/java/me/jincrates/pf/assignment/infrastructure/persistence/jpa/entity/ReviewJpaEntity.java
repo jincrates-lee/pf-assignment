@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -16,7 +17,10 @@ import org.hibernate.annotations.Comment;
 @Entity
 @Getter
 @SuperBuilder
-@Table(name = "reviews")
+@Table(name = "reviews", indexes = {
+    @Index(name = "idx_reviews_product_id", columnList = "productId")
+})
+
 @Comment("리뷰")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)

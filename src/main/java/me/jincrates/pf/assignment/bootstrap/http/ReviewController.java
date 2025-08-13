@@ -7,6 +7,7 @@ import me.jincrates.pf.assignment.application.dto.CreateReviewRequest;
 import me.jincrates.pf.assignment.application.dto.CreateReviewResponse;
 import me.jincrates.pf.assignment.application.dto.UpdateReviewRequest;
 import me.jincrates.pf.assignment.application.dto.UpdateReviewResponse;
+import me.jincrates.pf.assignment.bootstrap.http.docs.ReviewControllerDocs;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -19,10 +20,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/reviews")
-class ReviewController extends BaseController {
+class ReviewController extends BaseController implements ReviewControllerDocs {
 
     private final ReviewUseCase useCase;
 
+    @Override
     @PostMapping
     public ResponseEntity<BaseResponse<CreateReviewResponse>> createReview(
         @Valid @RequestBody CreateReviewRequest request
@@ -30,6 +32,7 @@ class ReviewController extends BaseController {
         return created(useCase.create(request));
     }
 
+    @Override
     @PatchMapping("/{reviewId}")
     public ResponseEntity<BaseResponse<UpdateReviewResponse>> updateReview(
         @PathVariable Long reviewId,
@@ -38,11 +41,12 @@ class ReviewController extends BaseController {
         return ok(useCase.update(request.withId(reviewId)));
     }
 
+    @Override
     @DeleteMapping("/{reviewId}")
     public ResponseEntity<BaseResponse<Void>> deleteReview(
         @PathVariable Long reviewId
     ) {
         useCase.delete(reviewId);
-        return noContent();
+        return ok();
     }
 }
