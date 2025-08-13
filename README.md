@@ -246,25 +246,25 @@ src/main/java
 ```mermaid
 gitGraph
     commit id: "Initial commit"
-    branch feature/category
-    checkout feature/category
+    branch feature/category-api
+    checkout feature/category-api
     commit id: "카테고리 생성 API"
     checkout main
-    merge feature/category
+    merge feature/category-api
     
-    branch feature/product
-    checkout feature/product
+    branch feature/product-api
+    checkout feature/product-api
     commit id: "상품 등록/수정/삭제"
     commit id: "상품 API 보완"
     checkout main
-    merge feature/product
+    merge feature/product-api
     
-    branch feature/review
-    checkout feature/review
+    branch feature/review-api
+    checkout feature/review-api
     commit id: "리뷰 등록/수정/삭제"
     commit id: "리뷰 API 보완"
     checkout main
-    merge feature/review
+    merge feature/review-api
     
     branch feature/query-api
     checkout feature/query-api
